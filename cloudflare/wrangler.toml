@@ -1,0 +1,3 @@
+name = "kimlikdao-node"
+main = "index.js"
+compatibility_date = "2022-12-12"
