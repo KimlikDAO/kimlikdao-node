@@ -1,7 +1,7 @@
 build/cloudflare/index.js: cloudflare/index.js \
     index.js index.d.js \
-    meetgreet/index.js meetgreet/index.d.js \
-    ipfs/index.js ipfs/index.d.js \
+    meetgreet/yo.js meetgreet/yo.d.js \
+    ipfs/ipfs.js ipfs/ipfs.d.js \
     lib/cloudflare/types.js lib/cloudflare/moduleWorker.js \
     lib/node/ipfs.js \
     lib/util/çevir.js
