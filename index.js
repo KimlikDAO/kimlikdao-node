@@ -1,25 +1,7 @@
-import oauth2 from "/devlet/oauth2";
-import pdf from "/edevlet/pdf";
+import oauth2 from "/edevlet/oauth2";
+// import pdf from "/edevlet/pdf";
 import ipfs from "/ipfs/ipfs";
 import yo from "/meetgreet/yo";
-
-/**
- * The persistence layer of the KimlikDAO protocol full node.
- *
- * We only require eventual consistency and guarantee that each key corresponds
- * to only one value ever. (keys are content hashes)
- *
- * @interface
- */
-function Persistence() { }
-
-/**
- * @type {!Cache}
- */
-Persistence.prototype.cache;
-
-/** @const {cloudflare.KeyValue} */
-Persistence.prototype.db;
 
 /**
  * @param {string} url
@@ -37,20 +19,20 @@ const pathname = (url) => {
  *
  * @param {!Request} req
  * @param {!Context} ctx
- * @param {!Environment} env
- * @param {!Persistence} db
+ * @param {!Parameters} param
+ * @param {!Persistence} pst
  * @return {Promise<!Response>|!Response}
  */
-const handleRequest = (req, ctx, env, db) => {
+const handleRequest = (req, ctx, param, pst) => {
   switch (pathname(req.url)) {
     case "/yo":
-      return yo.get(req, ctx, env);
-    case "/edevlet/pdf/commit":
-      return pdf.get(req, env);
-    case "/edevlet/pdf":
-      return pdf.put(req, env);
+      return yo.get(req, ctx, param);
+    //case "/edevlet/pdf/commit":
+    //  return pdf.get(req, env);
+    // case "/edevlet/pdf":
+    //  return pdf.put(req, env);
     case "/edevlet/oauth2":
-      return oauth2.get(req, ctx, env);
+      return oauth2.get(req, param);
 
     // IPFS endpoints have access to the persistence layer.
     // Note the IPFS data is fully encrypted on the user side by user private
@@ -60,9 +42,9 @@ const handleRequest = (req, ctx, env, db) => {
     // though we can never see it since it's encrpted by the user private
     // keys).
     case "/ipfs":
-      return ipfs.get(req, ctx, db);
+      return ipfs.get(req, ctx, pst);
     case "/api/v0/add":
-      return ipfs.add(req, ctx, db);
+      return ipfs.add(req, ctx, pst);
   }
   return new Response("NAPIM?");
 }

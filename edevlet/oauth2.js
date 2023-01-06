@@ -1,6 +1,8 @@
+import { validatePoW, validateTimestamp } from "./validation";
 import { generate } from "/lib/did/exposureReport";
-import { signDecryptedSections } from "/lib/did/infoSection";
-import { base64, base64ten } from "/lib/utli/çevir";
+import { signDecryptedSections } from "/lib/did/section";
+import { err } from "/lib/node/error";
+import { base64, base64ten } from "/lib/util/çevir";
 
 /** @const {string} */
 const TOKEN_SERVER_URL = "https://mock-oauth2.kimlikdao.net/token";
@@ -8,6 +10,10 @@ const TOKEN_SERVER_URL = "https://mock-oauth2.kimlikdao.net/token";
 const BILGI_SERVER_URL = "https://mock-oauth2.kimlikdao.net/bilgi";
 
 /**
+ * Convert a local `nvi.TemelBilgileri` into a global `did.PersonInfo`.
+ *
+ * The `exposureReportID` must be generated beforehand and supplied here.
+ *
  * @param {!nvi.TemelBilgileri} kişi
  * @param {!did.ExposureReportID} exposureReportID
  * @return {!did.PersonInfo}
@@ -42,10 +48,10 @@ const fromTürkiyeAdresi = (trAdresi) => {
 
 /**
  * @param {!Request} req
- * @param {!Environment} env
- * @return {Promise<!Response>}
+ * @param {!Parameters} param
+ * @return {Promise<!Response>|!Response}
  */
-const get = (req, env) => {
+const get = (req, param) => {
   if (req.method !== "GET")
     return err(405, ErrorCode.INVALID_REQUEST);
 
@@ -53,9 +59,9 @@ const get = (req, env) => {
   /** @type {number} */
   const idx = req.url.indexOf("?");
   /** @const {!Uint8Array} */
-  const commitPow = base64ten(url.slice(idx + 1, idx + 55));
+  const commitPow = base64ten(req.url.slice(idx + 1, idx + 55));
   /** @const {!URLSearchParams} */
-  const searchParams = new URLSearchParams(url.slice(idx + 56));
+  const searchParams = new URLSearchParams(req.url.slice(idx + 56));
   /** @const {string} */
   const oauthCode = searchParams.get('oauth_code') || "";
   /** @const {number} */
@@ -77,8 +83,8 @@ const get = (req, env) => {
   const tokenRequest = {
     grant_type: "authorization_code",
     code: oauthCode,
-    client_id: env.NODE_EDEVLET_CLIENT_ID,
-    client_secret: env.NODE_EDEVLET_CLIENT_SECRET,
+    client_id: param.NODE_EDEVLET_CLIENT_ID,
+    client_secret: param.NODE_EDEVLET_CLIENT_SECRET,
   }
   return fetch(TOKEN_SERVER_URL, {
     method: 'POST',
@@ -95,7 +101,7 @@ const get = (req, env) => {
       /** @const {!did.ExposureReportID} */
       const exposureReportID = generate(
         "TR" + data["Temel-Bilgiler"]["localIdNumber"],
-        env.KIMLIKDAO_EXPOSURE_ID_SECRET
+        param.KIMLIKDAO_EXPOSURE_ID_SECRET
       );
       /** @const {!did.DecryptedSections} */
       const decryptedSections = /** @type {!did.DecryptedSections} */({
@@ -108,9 +114,9 @@ const get = (req, env) => {
       });
       signDecryptedSections(
         decryptedSections,
-        commitment,
+        base64(commitPow.subarray(0, 32)),
         remoteTs,
-        BigInt(env.NODE_PRIVATE_KEY)
+        BigInt(param.NODE_PRIVATE_KEY)
       );
       return new Response(JSON.stringify(decryptedSections), {
         headers: {

@@ -1,4 +1,3 @@
-import { getValidatingTckt } from '/edevletPdfParser';
 import { keccak256Uint32 } from '/lib/crypto/sha3';
 import { signDecryptedSections } from "/lib/did/section";
 import { ErrorCode } from '/lib/node/error';
@@ -34,9 +33,9 @@ const base35 = (n) => {
 }
 
 /**
- * @param {!Uint8Array} commitArray
- * @param {string} pdfChallengeSecret
- * @return {string}
+ * @param {!Uint8Array} commitArray of length 32.
+ * @param {string} pdfChallengeSecret a base64 encoded byte array of length 32.
+ * @return {string} challenge, base35 encoded string.
  */
 const getChallenge = (commitArray, pdfChallengeSecret) => {
   /** @const {!Uint8Array} */
@@ -48,7 +47,7 @@ const getChallenge = (commitArray, pdfChallengeSecret) => {
 
 /**
  * @param {!Request} req
- * @param {!Environment} env
+ * @param {!Parameters} env
  * @return {Promise<!Response>}
  */
 const put = (req, env) => {
@@ -79,7 +78,7 @@ const put = (req, env) => {
 
   return req.formData()
     .then((form) => form.values().next().value.arrayBuffer())
-    .then((file) => getValidatingTckt(
+    .then((file) => pdfParser.getValidatingTckt(
       new Uint8Array(file),
       getChallenge(
         commitPow.subarray(0, 32),
@@ -102,7 +101,7 @@ const put = (req, env) => {
 
 /**
  * @param {!Request}
- * @param {!Environment}
+ * @param {!Parameters}
  * @param {Promise<!Response>}
  */
 const get = (req, env) => {

@@ -4,9 +4,17 @@
 
 /**
  * @interface
- * @extends {cloudflare.Environment}
  */
 function Parameters() { }
+
+/**
+ * @interface
+ * @extends {cloudflare.Environment}
+ */
+function Environment() {}
+
+/** @type {!cloudflare.KeyValue} */
+Environment.prototype.KV;
 
 /**
  * The private key chosen by the node operator. The EVM address corresponding
@@ -76,3 +84,21 @@ Parameters.prototype.KIMLIKDAO_EXPOSURE_ID_SECRET;
  * @extends {cloudflare.Context}
  */
 function Context() { }
+
+/**
+ * The persistence layer of the KimlikDAO protocol full node.
+ *
+ * We only require eventual consistency and guarantee that each key corresponds
+ * to only one value ever. (keys are content hashes)
+ *
+ * @interface
+ */
+function Persistence() { }
+
+/**
+ * @type {!Cache}
+ */
+Persistence.prototype.cache;
+
+/** @const {!cloudflare.KeyValue} */
+Persistence.prototype.db;

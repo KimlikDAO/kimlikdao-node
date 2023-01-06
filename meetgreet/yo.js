@@ -1,13 +1,13 @@
 
 /**
  * @param {!Request} req
- * @param {!Environment} env
  * @param {!Context} ctx
- * @return {Promise<!Response>}
+ * @param {!Parameters} param
+ * @return {!Response}
  */
-const get = (req, env, ctx) => {
-  return Promise.json(/** @type {YoBack} */({
-    address: env.NODE_EVM_ADDRESS
+const get = (req, ctx, param) => {
+  return Response.json(/** @type {!YoBack} */({
+    address: param.NODE_EVM_ADDRESS
   }));
 }
 

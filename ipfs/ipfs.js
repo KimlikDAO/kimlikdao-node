@@ -3,16 +3,16 @@ import ipfs from '/lib/node/ipfs';
 /**
  * @param {!Request} req
  * @param {!Context} ctx
- * @param {!Persistence} db
+ * @param {!Persistence} pst
  * @return {Promise<!Response>}
  */
-const add = (req, ctx, db) => req.formData()
+const add = (req, ctx, pst) => req.formData()
   .then((form) => form.get("blob").arrayBuffer())
   .then((file) => ipfs.hash(new Uint8Array(file))
     .then((hash) => {
       /** @const {string} */
       const cid = ipfs.CID(hash);
-      ctx.waitUntil(db.KV.put(cid, file));
+      ctx.waitUntil(pst.db.put(cid, file));
       return new Response(`{"Hash":"${cid}"}`, {
         headers: {
           'content-type': 'application/json',
@@ -26,14 +26,14 @@ const add = (req, ctx, db) => req.formData()
 /**
  * @param {!Request} req
  * @param {!Context} ctx
- * @param {!Persistence} db
+ * @param {!Persistence} pst
  * @return {Promise<!Response>}
  */
-const get = (req, ctx, db) => {
+const get = (req, ctx, pst) => {
   /** @type {boolean} */
   let inCache = false;
   /** @const {Promise<Response>} */
-  const fromCache = db.cache
+  const fromCache = pst.cache
     .match(req.url)
     .then((response) => {
       if (!response) return Promise.reject();
@@ -43,7 +43,7 @@ const get = (req, ctx, db) => {
   /** @const {string} */
   const cid = req.url.slice(req.url.lastIndexOf("/") + 1);
   /** @const {Promise<Response>} */
-  const fromKV = db.KV.get(cid, 'arrayBuffer')
+  const fromKV = pst.db.get(cid, 'arrayBuffer')
     .then((body) => {
       if (!body) return Promise.reject();
       /** @const {Response} */
@@ -57,7 +57,7 @@ const get = (req, ctx, db) => {
         }
       });
       ctx.waitUntil(Promise.resolve().then(() => {
-        if (!inCache) db.cache.put(req.url, res.clone())
+        if (!inCache) pst.cache.put(req.url, res.clone())
       }));
       return res;
     });
