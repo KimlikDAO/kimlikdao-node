@@ -18,4 +18,4 @@ pdfParser.ValidatingTCKT.prototype.validityCheck;
  * @param {number} timeNow The current unix timestamp in milliseconds.
  * @return {Promise<!pdfParser.ValidatingTCKT>}
  */
-pdfParser.getValidatingTckt = function () { }
+pdfParser.getValidatingTckt = function (file, challenge, timeNow) { }

@@ -1,5 +1,5 @@
 import oauth2 from "/edevlet/oauth2";
-// import pdf from "/edevlet/pdf";
+import pdf from "/edevlet/pdf";
 import ipfs from "/ipfs/ipfs";
 import yo from "/meetgreet/yo";
 
@@ -27,10 +27,10 @@ const handleRequest = (req, ctx, param, pst) => {
   switch (pathname(req.url)) {
     case "/yo":
       return yo.get(req, ctx, param);
-    //case "/edevlet/pdf/commit":
-    //  return pdf.get(req, env);
-    // case "/edevlet/pdf":
-    //  return pdf.put(req, env);
+    case "/edevlet/pdf/commit":
+      return pdf.get(req, param);
+    case "/edevlet/pdf":
+      return pdf.put(req, param);
     case "/edevlet/oauth2":
       return oauth2.get(req, param);
 

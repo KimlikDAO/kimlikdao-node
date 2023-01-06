@@ -20,6 +20,9 @@ const MONTHS = {
 /** @const {string} */
 const EDEVLET_URL = "https://www.turkiye.gov.tr";
 
+/** @const */
+const pdfParser = {};
+
 /**
  * @param {string} str String to be normalized
  * @return {string}
@@ -46,7 +49,7 @@ const canonicalCase = (str) => {
  * @param {string} tckn
  * @return {Promise<boolean>}
  */
-const validateWithEDevlet = (userFile, barcode, tckn) => {
+pdfParser.validateWithEDevlet = (userFile, barcode, tckn) => {
   return fetch(EDEVLET_URL + '/belge-dogrulama')
     .then(res => {
       const c = res.headers.get('set-cookie');
@@ -115,7 +118,7 @@ const validateWithEDevlet = (userFile, barcode, tckn) => {
  * @param {!Uint8Array} file pdf file to be parsed.
  * @param {string} challenge 9 digit challenge to be sought in the pdf file.
  * @param {number} timeNow The current unix timestamp.
- * @return {Promise<ValidatingTCKT>}
+ * @return {Promise<!pdfParser.ValidatingTCKT>}
  */
 const getValidatingTckt = (file, challenge, timeNow) => getDocument(file).promise
   .then((doc) => doc.getPage(1))

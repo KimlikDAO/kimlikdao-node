@@ -1,7 +1,8 @@
-import { keccak256Uint32 } from '/lib/crypto/sha3';
+import { validatePoW, validateTimestamp } from "./validation";
+import { keccak256Uint32 } from "/lib/crypto/sha3";
 import { signDecryptedSections } from "/lib/did/section";
-import { ErrorCode } from '/lib/node/error';
-import { base64ten, uint8ArrayeBase64ten } from '/lib/util/çevir';
+import { err, reject } from "/lib/node/error";
+import { base64, base64ten, uint8ArrayeBase64ten } from "/lib/util/çevir";
 
 /** @const {!Object<string, string>} */
 const STATIC_HEADERS = {
@@ -42,15 +43,15 @@ const getChallenge = (commitArray, pdfChallengeSecret) => {
   const buff = new Uint8Array(64);
   uint8ArrayeBase64ten(buff.subarray(32), pdfChallengeSecret);
   buff.set(commitArray);
-  return base35(keccak256Uint32(buff)[0]);
+  return base35(keccak256Uint32(new Uint32Array(buff.buffer))[0]);
 }
 
 /**
  * @param {!Request} req
- * @param {!Parameters} env
- * @return {Promise<!Response>}
+ * @param {!Parameters} param
+ * @return {Promise<!Response>|!Response}
  */
-const put = (req, env) => {
+const put = (req, param) => {
   if (req.method !== "PUT")
     return err(405, ErrorCode.INVALID_REQUEST);
 
@@ -77,12 +78,12 @@ const put = (req, env) => {
   }
 
   return req.formData()
-    .then((form) => form.values().next().value.arrayBuffer())
+    .then((/** @type {!FormData} */ form) => form.values().next().value.arrayBuffer())
     .then((file) => pdfParser.getValidatingTckt(
       new Uint8Array(file),
       getChallenge(
         commitPow.subarray(0, 32),
-        env.KIMLIKDAO_PDF_CHALLENGE_SECRET),
+        param.KIMLIKDAO_PDF_CHALLENGE_SECRET),
       Date.now()))
     .then((validatingTckt) => {
       /** @const {!did.DecryptedSections} */
@@ -90,21 +91,21 @@ const put = (req, env) => {
         validatingTckt.tckt,
         base64(commitPow.subarray(0, 32)),
         remoteTs,
-        BigInt(env.NODE_PRIVATE_KEY)
+        BigInt(param.NODE_PRIVATE_KEY)
       );
       validatingTckt.validityCheck.then((isValid) => isValid
         ? Response.json(signedTckt, { headers: PRIVATE_HEADERS })
         : reject(ErrorCode.AUTHENTICATION_FAILURE))
     })
-    .catch((error) => err(400, error));
+    .catch((error) => err(400, /** @type {!ErrorCode} */(error)));
 }
 
 /**
- * @param {!Request}
- * @param {!Parameters}
- * @param {Promise<!Response>}
+ * @param {!Request} req
+ * @param {!Parameters} param
+ * @return {Promise<!Response>|!Response}
  */
-const get = (req, env) => {
+const get = (req, param) => {
   if (req.method !== "GET")
     return err(405, ErrorCode.INVALID_REQUEST);
 
@@ -122,9 +123,9 @@ const get = (req, env) => {
   }
 
   return new Promise((resolve) => setTimeout(() => resolve(
-    Response.json(getChallenge(
+    new Response(getChallenge(
       commitPow.subarray(0, 32),
-      env.KIMLIKDAO_PDF_CHALLENGE_SECRET
+      param.KIMLIKDAO_PDF_CHALLENGE_SECRET
     ), { headers: STATIC_HEADERS })), 1000));
 }
 
