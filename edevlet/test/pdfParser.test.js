@@ -1,5 +1,4 @@
 import { readdir, readFile } from 'fs/promises';
-import { getValidatingTckt } from '../edevletPdfParser.js';
 
 /**
  * @param {string} fileName

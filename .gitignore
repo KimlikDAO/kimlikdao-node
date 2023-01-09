@@ -2,3 +2,6 @@
 /build
 /node_modules
 /target
+
+# Contains confidential test data such as actual e-devlet pdfs.
+/edevlet/testdata

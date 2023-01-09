@@ -122,6 +122,7 @@ const get = (req, param) => {
     if (powError) return powError;
   }
 
+  // (3) Return the challenge with 1 second threshold.
   return new Promise((resolve) => setTimeout(() => resolve(
     new Response(getChallenge(
       commitPow.subarray(0, 32),
