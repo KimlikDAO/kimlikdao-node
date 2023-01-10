@@ -5,7 +5,7 @@
  */
 import { handleRequest } from "/index";
 
-export default {
+const Worker = {
   /**
    * @param {!Request} req
    * @param {!Environment} env
@@ -21,3 +21,7 @@ export default {
     return handleRequest(req, ctx, /** @type {!Parameters} */(env), persistence);
   }
 };
+
+export default Worker;
+
+globalThis["Worker"] = Worker;

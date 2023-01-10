@@ -29,3 +29,4 @@ build/cloudflare/index.js: cloudflare/index.js \
                              --js $^ \
                              --js_output_file $@
 	yarn uglifyjs $@ -m -o $@
+	sed -i.bak 's/globalThis.Worker=/export default/g' $@
