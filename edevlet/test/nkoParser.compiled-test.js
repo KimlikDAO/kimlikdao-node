@@ -35,14 +35,14 @@ readdir('edevlet/testdata').then((files) => {
         getChallenge(fileName),
         getTime(fileName)))
       .then((validatingTckt) => validatingTckt
-        .validityCheck.then((isValid) => isValid ? JSON.stringify(validatingTckt.tckt) : "")
+        .validityCheck.then((isValid) => isValid ? JSON.stringify(validatingTckt.tckt): "Hata")
       );
 
     return Promise.all([correctPromise, returnedPromise])
       .then(([correct, returned]) => {
-        if (correct == returned) console.log("Geçti\n" + correct);
+        if (correct == returned) console.log("Geçti\n");
         else {
-          console.log("Hata\n", correct, "\n\n", returned);
+          console.log("Hata\nExpected:", correct, "\n\nGiven:", returned);
         }
       })
       .catch(console.log);

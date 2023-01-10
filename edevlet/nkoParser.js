@@ -322,8 +322,8 @@ const getValidatingTckt = (file, challenge, timeNow) => pdfjs.getDocument(file).
 
       return {
         tckt: /** @type {!did.DecryptedSections} */({
-          personInfo,
-          kütükBilgileri,
+          "personInfo": personInfo,
+          "kütükBilgileri": kütükBilgileri,
         }),
         validityCheck: validateWithEDevlet(file, barcode, personInfo.localIdNumber.slice(2))
       }
