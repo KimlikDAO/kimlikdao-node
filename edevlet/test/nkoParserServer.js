@@ -2,13 +2,13 @@ import { createServer } from 'http';
 import { readFileSync } from 'fs';
 
 createServer((req, res) => {
-  if (req.url.startsWith('/testdata')) {
+  if (req.url.startsWith('/edevlet/testdata')) {
     res.writeHead(200, {'content-type': 'application/pdf'});
     res.write(readFileSync(req.url.slice(1)));
     res.end();
   } else if (req.url == '/') {
     res.writeHead(200, {'content-type': 'text/html;charset=utf-8'});
-    res.write(readFileSync('tests/browserTest.html'));
+    res.write(readFileSync('edevlet/test/nkoParser.browser-test.html'));
     res.end();
   } else if (!req.url.endsWith('.ico')){
     let fileName = req.url.slice(1);
