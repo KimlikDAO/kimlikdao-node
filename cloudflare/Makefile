@@ -1,7 +1,7 @@
 build/cloudflare/index.js: cloudflare/index.js \
     index.js index.d.js \
     edevlet/oauth2.js edevlet/validation.js \
-    edevlet/pdf.js edevlet/pdfParser.d.js \
+    edevlet/nko.js edevlet/nkoParser.js edevlet/pdf.d.js \
     meetgreet/yo.d.js meetgreet/yo.js \
     ipfs/ipfs.d.js ipfs/ipfs.js \
     lib/api/oauth2.d.js \

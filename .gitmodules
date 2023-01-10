@@ -1,3 +1,6 @@
 [submodule "lib"]
 	path = lib
 	url = https://github.com/KimlikDAO/kimlikdao-js
+[submodule "edevlet/pdf.js"]
+	path = edevlet/pdf.js
+	url = https://github.com/KimlikDAO/pdf.js

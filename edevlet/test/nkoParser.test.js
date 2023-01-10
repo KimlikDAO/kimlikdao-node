@@ -13,16 +13,19 @@ const getAnswersFile = (fileName) => fileName.split("-")[0] + ".json";
 
 const getChallenge = (fileName) => fileName.split("-")[2].split(".")[0];
 
-readdir('testdata').then((files) => {
+readdir('edevlet/testdata').then((files) => {
   files.forEach((fileName) => {
     if (!fileName.endsWith('.pdf')) return;
     console.log("Testing " + fileName);
-    fileName = 'testdata/' + fileName;
+    fileName = 'edevlet/testdata/' + fileName;
     const correctPromise = readFile(getAnswersFile(fileName), 'utf8')
       .then((file) => JSON.stringify(JSON.parse(file)));
 
     const returnedPromise = readFile(fileName)
-      .then((file) => getValidatingTckt(file, getChallenge(fileName), getTime(fileName)))
+      .then((file) => nkoParser.getValidatingTckt(
+        file,
+        getChallenge(fileName),
+        getTime(fileName)))
       .then((validatingTckt) => validatingTckt
         .validityCheck.then((isValid) => isValid ? JSON.stringify(validatingTckt.tckt) : "")
       );

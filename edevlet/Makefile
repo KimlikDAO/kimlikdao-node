@@ -1,7 +1,11 @@
-build/edevlet/pdfParser.js: edevlet/pdfParser.js edevlet/pdfParser.d.js \
-    pdf.js/src/pdf.js \
-    pdf.js/src/shared/*.js pdf.js/src/display/*.js \
-    pdf.js/src/core/*.js pdf.js/src/core/xfa/*.js
+include edevlet/test/Makefile
+
+build/edevlet/nkoParser.js: edevlet/nkoParser.js edevlet/pdf.d.js \
+    lib/did/section.d.js lib/did/TCKTVerisi.d.js \
+    lib/ethereum/jsonrpc.js lib/ethereum/provider.js \
+    lib/ethereum/ERC721Unlockable.js \
+	lib/node/error.d.js lib/node/error.js \
+    lib/node/nvi.d.js
 	mkdir -p $(dir $@)
 	yarn google-closure-compiler -W VERBOSE -O ADVANCED --charset UTF-8 \
                              --emit_use_strict \

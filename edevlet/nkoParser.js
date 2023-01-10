@@ -1,5 +1,4 @@
-import { ErrorCode, makeError } from './apiError.js';
-import { getDocument } from './pdf.js/src/pdf.js';
+import { reject } from '/lib/node/error';
 
 /** @const {!Object<string, number>} */
 const MONTHS = {
@@ -19,9 +18,6 @@ const MONTHS = {
 
 /** @const {string} */
 const EDEVLET_URL = "https://www.turkiye.gov.tr";
-
-/** @const */
-const pdfParser = {};
 
 /**
  * @param {string} str String to be normalized
@@ -44,12 +40,12 @@ const canonicalCase = (str) => {
 }
 
 /**
- * @param {!Uint8Array} file
+ * @param {!Uint8Array} userFile
  * @param {string} barcode
  * @param {string} tckn
- * @return {Promise<boolean>}
+ * @return {!Promise<boolean>}
  */
-pdfParser.validateWithEDevlet = (userFile, barcode, tckn) => {
+const validateWithEDevlet = (userFile, barcode, tckn) => {
   return fetch(EDEVLET_URL + '/belge-dogrulama')
     .then(res => {
       const c = res.headers.get('set-cookie');
@@ -118,11 +114,14 @@ pdfParser.validateWithEDevlet = (userFile, barcode, tckn) => {
  * @param {!Uint8Array} file pdf file to be parsed.
  * @param {string} challenge 9 digit challenge to be sought in the pdf file.
  * @param {number} timeNow The current unix timestamp.
- * @return {Promise<!pdfParser.ValidatingTCKT>}
+ * @return {!Promise<{
+ *   tckt: !did.DecryptedSections,
+ *   validityCheck: !Promise<boolean>
+ * }>}
  */
-const getValidatingTckt = (file, challenge, timeNow) => getDocument(file).promise
+const getValidatingTckt = (file, challenge, timeNow) => pdfjs.getDocument(file).promise
   .then((doc) => doc.getPage(1))
-  .catch(() => makeError(ErrorCode.INCORRECT_FILE_FORMAT))
+  .catch(() => reject(ErrorCode.INCORRECT_FILE_FORMAT))
   .then((page) => {
     const viewport = page.getViewport({ scale: 1.0 });
     return page.getTextContent().then((text) => {
@@ -193,7 +192,7 @@ const getValidatingTckt = (file, challenge, timeNow) => getDocument(file).promis
       console.log(documentDate.getTime());
       const documentAge = timeNow - documentDate;
       if (documentAge > 86400_000)
-        return makeError(ErrorCode.DOCUMENT_EXPIRED, [Math.round(documentAge / 3600_000)]);
+        return reject(ErrorCode.DOCUMENT_EXPIRED, [Math.round(documentAge / 3600_000)]);
 
       const personInfo = /** @const {!did.PersonInfo} */({
         first: "",
@@ -267,10 +266,9 @@ const getValidatingTckt = (file, challenge, timeNow) => getDocument(file).promis
               if (x <= 80) {
                 if (y > personY) {
                   kütükBilgileri.mhali = str;
+                } else {
+                  // personInfo.din += t.str;
                 }
-                else
-                  ;
-                // personInfo.din += t.str;
               } else if (x <= 83) {
                 kütükBilgileri.tescil += t.str;
               } else if (str.toUpperCase().includes('SAĞ'))
@@ -314,21 +312,21 @@ const getValidatingTckt = (file, challenge, timeNow) => getDocument(file).promis
           kütükBilgileri[key] = canonicalCase(kütükBilgileri[key])
       }
       if (!isRecordValid)
-        return makeError(ErrorCode.INVALID_RECORD);
+        return reject(ErrorCode.INVALID_RECORD);
       if (!isInstitutionValid)
-        return makeError(ErrorCode.INCORRECT_INSTITUTION);
+        return reject(ErrorCode.INCORRECT_INSTITUTION);
       if (!isAlive)
-        return makeError(ErrorCode.PERSON_NOT_ALIVE);
+        return reject(ErrorCode.PERSON_NOT_ALIVE);
       if (!isChallengeValid)
-        return makeError(ErrorCode.INVALID_CHALLENGE, [challenge]);
+        return reject(ErrorCode.INVALID_CHALLENGE, [challenge]);
 
-      return /** @type {ValidatingTCKT} */({
-        tckt: /** @type {!did.DecryptedInfos} */({
+      return {
+        tckt: /** @type {!did.DecryptedSections} */({
           personInfo,
           kütükBilgileri,
         }),
         validityCheck: validateWithEDevlet(file, barcode, personInfo.localIdNumber.slice(2))
-      })
+      }
     })
   });
 
