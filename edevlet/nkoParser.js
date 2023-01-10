@@ -1,4 +1,4 @@
-import { reject } from '/lib/node/error';
+import { reject } from '../lib/node/error';
 
 /** @const {!Object<string, number>} */
 const MONTHS = {

@@ -1,4 +1,4 @@
-import { readdir, readFile } from 'fs/promises';
+import { getValidatingTckt } from "/edevlet/nkoParser";
 
 /**
  * @param {string} fileName
@@ -6,11 +6,19 @@ import { readdir, readFile } from 'fs/promises';
  */
 const getTime = (fileName) => {
   const d = fileName.split("-")[1].split(".");
-  return new Date(`${d[0]}-${d[1]}-${d[2]}T00:00:00.000+03:00`);
+  return new Date(`${d[0]}-${d[1]}-${d[2]}T00:00:00.000+03:00`).getTime();
 }
 
+/**
+ * @param {string} fileName
+ * @return {string}
+ */
 const getAnswersFile = (fileName) => fileName.split("-")[0] + ".json";
 
+/**
+ * @param {string} fileName
+ * @return {string}
+ */
 const getChallenge = (fileName) => fileName.split("-")[2].split(".")[0];
 
 readdir('edevlet/testdata').then((files) => {
@@ -22,7 +30,7 @@ readdir('edevlet/testdata').then((files) => {
       .then((file) => JSON.stringify(JSON.parse(file)));
 
     const returnedPromise = readFile(fileName)
-      .then((file) => nkoParser.getValidatingTckt(
+      .then((file) => getValidatingTckt(
         file,
         getChallenge(fileName),
         getTime(fileName)))
