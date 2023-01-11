@@ -1,4 +1,4 @@
-build/cloudflare/index.js: cloudflare/index.js \
+build/cloudflare/fullnode.js: cloudflare/fullnode.js \
     index.js index.d.js \
     edevlet/oauth2.js edevlet/validation.js \
     edevlet/nko.js edevlet/nkoParser.js edevlet/pdf.d.js \
@@ -16,6 +16,26 @@ build/cloudflare/index.js: cloudflare/index.js \
     lib/ethereum/ERC721Unlockable.js \
     lib/node/error.d.js lib/node/error.js \
     lib/node/nvi.d.js \
+    lib/node/ipfs.js \
+    lib/util/çevir.js
+	mkdir -p $(dir $@)
+	yarn google-closure-compiler -W VERBOSE -O ADVANCED --charset UTF-8 \
+                             --emit_use_strict \
+                             --language_in ECMASCRIPT_NEXT \
+                             --module_resolution NODE \
+                             --assume_function_wrapper \
+                             --dependency_mode PRUNE \
+                             --entry_point $< \
+                             --js $^ \
+                             --js_output_file $@
+	yarn uglifyjs $@ -m -o $@
+	sed -i.bak 's/globalThis.Worker=/export default/g' $@
+
+build/cloudflare/lightnode.js: cloudflare/lightnode.js \
+    index.d.js \
+    ipfs/ipfs.d.js ipfs/ipfs.js \
+    lib/cloudflare/types.js lib/cloudflare/moduleWorker.js \
+    lib/node/error.d.js lib/node/error.js \
     lib/node/ipfs.js \
     lib/util/çevir.js
 	mkdir -p $(dir $@)

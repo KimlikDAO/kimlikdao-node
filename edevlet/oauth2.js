@@ -49,7 +49,7 @@ const fromTürkiyeAdresi = (trAdresi) => {
 /**
  * @param {!Request} req
  * @param {!Parameters} param
- * @return {Promise<!Response>|!Response}
+ * @return {!Promise<!Response>|!Response}
  */
 const get = (req, param) => {
   if (req.method !== "GET")

@@ -1,0 +1,15 @@
+name = "kimlikdao-node5"
+main = "../build/cloudflare/fullnode.js"
+
+route = { pattern = "node5.kimlikdao.org", custom_domain = true }
+
+kv_namespaces = [
+    { binding = "KV", id = "52b51a1db0ce4508a144633d407dab93" }
+]
+compatibility_date = "2023-01-01"
+workers_dev = false
+usage_model = "unbound"
+no_bundle = true
+minify = false
+send_metrics = false
+node_compat = false

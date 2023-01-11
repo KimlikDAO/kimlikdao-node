@@ -4,7 +4,7 @@ import ipfs from '/lib/node/ipfs';
  * @param {!Request} req
  * @param {!Context} ctx
  * @param {!Persistence} pst
- * @return {Promise<!Response>}
+ * @return {!Promise<!Response>}
  */
 const add = (req, ctx, pst) => req.formData()
   .then((form) => form.get("blob").arrayBuffer())
@@ -27,7 +27,7 @@ const add = (req, ctx, pst) => req.formData()
  * @param {!Request} req
  * @param {!Context} ctx
  * @param {!Persistence} pst
- * @return {Promise<!Response>}
+ * @return {!Promise<!Response>}
  */
 const get = (req, ctx, pst) => {
   /** @type {boolean} */
@@ -46,7 +46,7 @@ const get = (req, ctx, pst) => {
   const fromKV = pst.db.get(cid, 'arrayBuffer')
     .then((body) => {
       if (!body) return Promise.reject();
-      /** @const {Response} */
+      /** @const {!Response} */
       const res = new Response(body, {
         headers: {
           'cache-control': 'max-age=29030400,public,immutable',

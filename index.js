@@ -1,5 +1,5 @@
-import oauth2 from "/edevlet/oauth2";
 import nko from "/edevlet/nko";
+import oauth2 from "/edevlet/oauth2";
 import ipfs from "/ipfs/ipfs";
 import yo from "/meetgreet/yo";
 
@@ -21,12 +21,12 @@ const pathname = (url) => {
  * @param {!Context} ctx
  * @param {!Parameters} param
  * @param {!Persistence} pst
- * @return {Promise<!Response>|!Response}
+ * @return {!Promise<!Response>|!Response}
  */
 const handleRequest = (req, ctx, param, pst) => {
   switch (pathname(req.url)) {
     case "/yo":
-      return yo.get(req, ctx, param);
+      return yo.get(req, param);
     case "/edevlet/nko/commit":
       return nko.get(req, param);
     case "/edevlet/nko":

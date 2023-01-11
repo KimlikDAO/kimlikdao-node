@@ -50,7 +50,7 @@ const getChallenge = (commitArray, pdfChallengeSecret) => {
 /**
  * @param {!Request} req
  * @param {!Parameters} param
- * @return {Promise<!Response>|!Response}
+ * @return {!Promise<!Response>|!Response}
  */
 const put = (req, param) => {
   if (req.method !== "PUT")
@@ -104,7 +104,7 @@ const put = (req, param) => {
 /**
  * @param {!Request} req
  * @param {!Parameters} param
- * @return {Promise<!Response>|!Response}
+ * @return {!Promise<!Response>|!Response}
  */
 const get = (req, param) => {
   if (req.method !== "GET")
