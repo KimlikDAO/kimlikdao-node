@@ -1,8 +1,10 @@
 import { getValidatingTckt } from "./nkoParser";
 import { validatePoW, validateTimestamp } from "./validation";
 import { keccak256Uint32 } from "/lib/crypto/sha3";
+import { generateReportID } from "/lib/did/exposureReport";
+import { generateHumanID } from "/lib/did/humanID";
 import { signDecryptedSections } from "/lib/did/section";
-import { err, reject } from "/lib/node/error";
+import { err, errorResponse, reject } from "/lib/node/error";
 import { base64, base64ten, uint8ArrayeBase64ten } from "/lib/util/çevir";
 
 /** @const {!Object<string, string>} */
@@ -87,18 +89,35 @@ const put = (req, param) => {
         param.KIMLIKDAO_PDF_CHALLENGE_SECRET),
       Date.now()))
     .then((validatingTckt) => {
+      /** @const {!did.PersonInfo} */
+      const personInfo = /** @type {!did.PersonInfo} */(
+        validatingTckt.tckt["personInfo"]);
+      /** @const {!did.ExposureReportID} */
+      const exposureReportID = generateReportID(
+        personInfo.localIdNumber,
+        param.KIMLIKDAO_EXPOSURE_ID_SECRET
+      );
+      personInfo.exposureReportID = exposureReportID;
+      /** @const {!did.DecryptedSections} */
+      const tckt = {
+        ...validatingTckt.tckt,
+        "humanID": generateHumanID(personInfo.localIdNumber,
+          param.KIMLIKDAO_HUMAN_ID_SECRET),
+        "exposureReport": /** @type {!did.ExposureReport} */(
+          Object.assign({}, exposureReportID))
+      }
       /** @const {!did.DecryptedSections} */
       const signedTckt = signDecryptedSections(
-        validatingTckt.tckt,
+        tckt,
         base64(commitPow.subarray(0, 32)),
         remoteTs,
-        BigInt(param.NODE_PRIVATE_KEY)
+        BigInt("0x" + param.NODE_PRIVATE_KEY)
       );
       validatingTckt.validityCheck.then((isValid) => isValid
         ? Response.json(signedTckt, { headers: PRIVATE_HEADERS })
         : reject(ErrorCode.AUTHENTICATION_FAILURE))
     })
-    .catch((error) => err(400, /** @type {!ErrorCode} */(error)));
+    .catch((error) => errorResponse(/** @type {!HataBildirimi} */(error)));
 }
 
 /**

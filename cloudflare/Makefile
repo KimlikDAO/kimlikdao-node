@@ -9,6 +9,7 @@ build/cloudflare/fullnode.js: cloudflare/fullnode.js \
     lib/crypto/sha3.js \
     lib/crypto/modular.js lib/crypto/secp256k1.js \
     lib/did/exposureReport.d.js lib/did/exposureReport.js \
+    lib/did/humanID.d.js lib/did/humanID.js \
     lib/did/section.d.js lib/did/section.js \
     lib/did/TCKTVerisi.d.js \
     lib/ethereum/jsonrpc.js lib/ethereum/provider.js \

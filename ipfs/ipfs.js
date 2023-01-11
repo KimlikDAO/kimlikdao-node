@@ -32,7 +32,7 @@ const add = (req, ctx, pst) => req.formData()
 const get = (req, ctx, pst) => {
   /** @type {boolean} */
   let inCache = false;
-  /** @const {Promise<Response>} */
+  /** @const {!Promise<Response>} */
   const fromCache = pst.cache
     .match(req.url)
     .then((response) => {
@@ -42,7 +42,7 @@ const get = (req, ctx, pst) => {
     });
   /** @const {string} */
   const cid = req.url.slice(req.url.lastIndexOf("/") + 1);
-  /** @const {Promise<Response>} */
+  /** @const {!Promise<Response>} */
   const fromKV = pst.db.get(cid, 'arrayBuffer')
     .then((body) => {
       if (!body) return Promise.reject();

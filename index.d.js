@@ -21,7 +21,7 @@ Environment.prototype.KV;
  * to this private key holds the TCKO-st (staked TCKOs) and is registered at
  * the `TCKTSigners` contract at `signers.kimlikdao.eth` on Avalanche-C.
  *
- * Has to start with "0x".
+ * It has to be a hex string of 64 chacarte (no "0x" prefix).
  *
  * @const {string}
  */
@@ -29,22 +29,26 @@ Parameters.prototype.NODE_PRIVATE_KEY;
 
 /**
  * The address derived from the `NODE_PRIVATE_KEY` stored here for convenience.
- * 
+ *
+ * A length 42 hex string starting with "0x".
+ *
  * @const {string}
  */
 Parameters.prototype.NODE_EVM_ADDRESS;
 
 /**
- * Signer nodes looking to provide an `/edevlet` endpoint need a e-devlet
- * client id and client secret, obtained through a Türksat AŞ application.
+ * Signer nodes looking to provide an `/edevlet/oauth2` endpoint need an
+ * e-devlet client id and client secret, obtained through a Türksat A.Ş.
+ * application.
  *
  * @const {string}
  */
 Parameters.prototype.NODE_EDEVLET_CLIENT_ID;
 
 /**
- * Signer nodes looking to provide an `/edevlet` endpoint need an e-devlet
- * client id and client secret, obtained through a Türksat AŞ application.
+ * Signer nodes looking to provide an `/edevlet/oauth2` endpoint need an
+ * e-devlet client id and client secret, obtained through a Türksat A.Ş.
+ * application.
  *
  * @const {string}
  */
@@ -54,6 +58,8 @@ Parameters.prototype.NODE_EDEVLET_CLIENT_SECRET;
  * The secret used in the PDF challenge generation. This secret is cycled every
  * week by KimlikDAO protocol gossip between the signers registered at
  * `TCKTSigners`.
+ *
+ * Should be a base64 encoded 32 byte string.
  *
  * @type {string}
  */

@@ -1,8 +1,9 @@
 import { validatePoW, validateTimestamp } from "./validation";
-import { generate } from "/lib/did/exposureReport";
+import { generateReportID } from "/lib/did/exposureReport";
 import { signDecryptedSections } from "/lib/did/section";
 import { err } from "/lib/node/error";
 import { base64, base64ten } from "/lib/util/çevir";
+import { generateHumanID } from "/lib/did/humanID";
 
 /** @const {string} */
 const TOKEN_SERVER_URL = "https://mock-oauth2.kimlikdao.net/token";
@@ -98,9 +99,11 @@ const get = (req, param) => {
     }))
     .then((res) => res.json())
     .then((data) => {
+      /** @const {string} */
+      const localIdNumber = "TR" + data["Temel-Bilgileri"]["TCKN"];
       /** @const {!did.ExposureReportID} */
-      const exposureReportID = generate(
-        "TR" + data["Temel-Bilgileri"]["TCKN"],
+      const exposureReportID = generateReportID(
+        localIdNumber,
         param.KIMLIKDAO_EXPOSURE_ID_SECRET
       );
       /** @const {!did.DecryptedSections} */
@@ -110,6 +113,7 @@ const get = (req, param) => {
         "kütükBilgileri":
           /** @type {!did.KütükBilgileri} */(data["Kutuk-Bilgileri"]),
         "addressInfo": fromTürkiyeAdresi(data["Adres-Bilgileri"]),
+        "humanID": generateHumanID(localIdNumber, param.KIMLIKDAO_HUMAN_ID_SECRET),
         "exposureReport": /** @type {!did.ExposureReport} */(
           Object.assign({}, exposureReportID))
       });
