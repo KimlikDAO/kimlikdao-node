@@ -30,7 +30,7 @@ const handleRequest = (req, ctx, param, pst) => {
     case "/edevlet/nko/commit":
       return nko.get(req, param);
     case "/edevlet/nko":
-      return nko.put(req, param);
+      return nko.post(req, param);
     case "/edevlet/oauth2":
       return oauth2.get(req, param);
 

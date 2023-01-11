@@ -1,9 +1,9 @@
 import { validatePoW, validateTimestamp } from "./validation";
 import { generateReportID } from "/lib/did/exposureReport";
-import { signDecryptedSections } from "/lib/did/section";
-import { err } from "/lib/node/error";
-import { base64, base64ten } from "/lib/util/çevir";
 import { generateHumanID } from "/lib/did/humanID";
+import { signDecryptedSections } from "/lib/did/section";
+import { err, ErrorCode } from "/lib/node/error";
+import { base64, base64ten } from "/lib/util/çevir";
 
 /** @const {string} */
 const TOKEN_SERVER_URL = "https://mock-oauth2.kimlikdao.net/token";

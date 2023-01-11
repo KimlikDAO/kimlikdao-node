@@ -1,5 +1,5 @@
 import { keccak256Uint32 } from "/lib/crypto/sha3";
-import { errWithMessage } from "/lib/node/error";
+import { ErrorCode, errWithMessage } from "/lib/node/error";
 
 /** @define {number} */
 const POW_EŞİĞİ = 20000;

@@ -4,7 +4,7 @@ import { keccak256Uint32 } from "/lib/crypto/sha3";
 import { generateReportID } from "/lib/did/exposureReport";
 import { generateHumanID } from "/lib/did/humanID";
 import { signDecryptedSections } from "/lib/did/section";
-import { err, errorResponse, reject } from "/lib/node/error";
+import { err, ErrorCode, errorResponse, reject } from "/lib/node/error";
 import { base64, base64ten, uint8ArrayeBase64ten } from "/lib/util/çevir";
 
 /** @const {!Object<string, string>} */
@@ -54,8 +54,8 @@ const getChallenge = (commitArray, pdfChallengeSecret) => {
  * @param {!Parameters} param
  * @return {!Promise<!Response>|!Response}
  */
-const put = (req, param) => {
-  if (req.method !== "PUT")
+const post = (req, param) => {
+  if (req.method !== "POST")
     return err(405, ErrorCode.INVALID_REQUEST);
 
   // (1) Parse the url.
@@ -150,4 +150,4 @@ const get = (req, param) => {
     ), { headers: STATIC_HEADERS })), 1000));
 }
 
-export default { put, get };
+export default { get, post };
