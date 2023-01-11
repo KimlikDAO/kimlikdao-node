@@ -100,7 +100,7 @@ const get = (req, param) => {
     .then((data) => {
       /** @const {!did.ExposureReportID} */
       const exposureReportID = generate(
-        "TR" + data["Temel-Bilgiler"]["localIdNumber"],
+        "TR" + data["Temel-Bilgileri"]["TCKN"],
         param.KIMLIKDAO_EXPOSURE_ID_SECRET
       );
       /** @const {!did.DecryptedSections} */
@@ -110,13 +110,14 @@ const get = (req, param) => {
         "kütükBilgileri":
           /** @type {!did.KütükBilgileri} */(data["Kutuk-Bilgileri"]),
         "addressInfo": fromTürkiyeAdresi(data["Adres-Bilgileri"]),
-        "exposureReport": /** @type {!did.ExposureReport} */(exposureReportID)
+        "exposureReport": /** @type {!did.ExposureReport} */(
+          Object.assign({}, exposureReportID))
       });
       signDecryptedSections(
         decryptedSections,
         base64(commitPow.subarray(0, 32)),
         remoteTs,
-        BigInt(param.NODE_PRIVATE_KEY)
+        1n // Don't sign mock data with actual keys
       );
       return new Response(JSON.stringify(decryptedSections), {
         headers: {
