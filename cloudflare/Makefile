@@ -22,7 +22,6 @@ build/cloudflare/fullnode.js: cloudflare/fullnode.js \
     build/edevlet/pdfCompiled.js
 	mkdir -p $(dir $@)
 	yarn google-closure-compiler -W VERBOSE -O ADVANCED --charset UTF-8 \
-                             --emit_use_strict \
                              --language_in ECMASCRIPT_NEXT \
                              --module_resolution NODE \
                              --dependency_mode PRUNE \

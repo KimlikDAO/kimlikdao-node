@@ -23,13 +23,14 @@ build/edevlet/pdfCompiled.js: edevlet/pdfCompiled.js \
     edevlet/pdf.js/src/shared/*.js edevlet/pdf.js/src/display/*.js \
     edevlet/pdf.js/src/core/*.js edevlet/pdf.js/src/core/xfa/*.js
 	mkdir -p $(dir $@)
-	yarn google-closure-compiler -W VERBOSE -O SIMPLE --charset UTF-8 \
-                             --emit_use_strict \
+	yarn google-closure-compiler -W VERBOSE -O SIMPLE \
                              --language_in ECMASCRIPT_NEXT \
                              --module_resolution NODE \
                              --assume_function_wrapper \
                              --dependency_mode PRUNE \
-                             --isolation_mode IIFE \
                              --entry_point $< \
                              --js $^ \
-                             --js_output_file $@
+                             --js_output_file $@.tmp
+	yarn uglifyjs $@.tmp -m -o $@.tmp
+	printf "'use strict';(()=>{" | cat - $@.tmp > $@
+	printf "})();" >> $@
