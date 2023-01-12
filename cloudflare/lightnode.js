@@ -3,7 +3,7 @@
  *
  * @author KimlikDAO
  */
-import ipfs from "../ipfs/ipfs";
+import ipfs from "../ipfs";
 
 const Worker = {
   /**

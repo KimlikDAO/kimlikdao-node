@@ -1,6 +1,6 @@
 import nko from "/edevlet/nko";
 import oauth2 from "/edevlet/oauth2";
-import ipfs from "/ipfs/ipfs";
+import ipfs from "/ipfs";
 import yo from "/meetgreet/yo";
 
 /**

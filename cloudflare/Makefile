@@ -3,7 +3,7 @@ build/cloudflare/fullnode.js: cloudflare/fullnode.js \
     edevlet/oauth2.js edevlet/validation.js \
     edevlet/nko.js edevlet/nkoParser.js edevlet/pdf.d.js \
     meetgreet/yo.d.js meetgreet/yo.js \
-    ipfs/ipfs.d.js ipfs/ipfs.js \
+    ipfs.js \
     lib/api/oauth2.d.js \
     lib/cloudflare/types.d.js lib/cloudflare/moduleWorker.d.js \
     lib/crypto/sha3.js \
@@ -36,7 +36,7 @@ build/cloudflare/fullnode.js: cloudflare/fullnode.js \
 
 build/cloudflare/lightnode.js: cloudflare/lightnode.js \
     index.d.js \
-    ipfs/ipfs.d.js ipfs/ipfs.js \
+    ipfs.js \
     lib/cloudflare/types.d.js lib/cloudflare/moduleWorker.d.js \
     lib/node/error.d.js lib/node/error.js \
     lib/node/ipfs.js \
