@@ -113,7 +113,7 @@ const post = (req, param) => {
         remoteTs,
         BigInt("0x" + param.NODE_PRIVATE_KEY)
       );
-      validatingTckt.validityCheck.then((isValid) => isValid
+      return validatingTckt.validityCheck.then((isValid) => isValid
         ? Response.json(signedTckt, { headers: PRIVATE_HEADERS })
         : reject(ErrorCode.AUTHENTICATION_FAILURE))
     })

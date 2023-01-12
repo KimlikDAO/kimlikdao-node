@@ -12,7 +12,7 @@ build/edevlet/test/nkoParser.compiled-test.js: edevlet/test/nkoParser.compiled-t
                              --emit_use_strict \
                              --module_resolution NODE \
                              --dependency_mode PRUNE \
-                             --isolation_mode IIFE \
+                             --assume_function_wrapper \
                              --entry_point $< \
                              --js $(filter-out build/edevlet/pdfCompiled.js, $^) \
                              --js_output_file $@.tmp

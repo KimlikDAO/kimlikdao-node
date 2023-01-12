@@ -18,19 +18,21 @@ build/cloudflare/fullnode.js: cloudflare/fullnode.js \
     lib/node/error.d.js lib/node/error.js \
     lib/node/nvi.d.js \
     lib/node/ipfs.js \
-    lib/util/çevir.js
+    lib/util/çevir.js \
+    build/edevlet/pdfCompiled.js
 	mkdir -p $(dir $@)
 	yarn google-closure-compiler -W VERBOSE -O ADVANCED --charset UTF-8 \
                              --emit_use_strict \
                              --language_in ECMASCRIPT_NEXT \
                              --module_resolution NODE \
-                             --assume_function_wrapper \
                              --dependency_mode PRUNE \
+                             --assume_function_wrapper \
                              --entry_point $< \
-                             --js $^ \
-                             --js_output_file $@
-	yarn uglifyjs $@ -m -o $@
-	sed -i.bak 's/globalThis.Worker=/export default/g' $@
+                             --js $(filter-out build/edevlet/pdfCompiled.js, $^) \
+                             --js_output_file $@.tmp
+	yarn uglifyjs $@.tmp -m -o $@.tmp
+	sed -i.bak 's/globalThis.Worker=/export default/g' $@.tmp
+	cat build/edevlet/pdfCompiled.js $@.tmp > $@
 
 build/cloudflare/lightnode.js: cloudflare/lightnode.js \
     index.d.js \
