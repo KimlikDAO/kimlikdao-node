@@ -85,6 +85,9 @@ Parameters.prototype.KIMLIKDAO_HUMAN_ID_SECRET;
  */
 Parameters.prototype.KIMLIKDAO_EXPOSURE_ID_SECRET;
 
+/** @type {string} */
+Parameters.prototype.KIMLIKDAO_POW_THRESHOLD;
+
 /**
  * @interface
  * @extends {cloudflare.Context}

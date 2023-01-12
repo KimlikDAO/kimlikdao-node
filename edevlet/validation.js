@@ -1,9 +1,6 @@
 import { keccak256Uint32 } from "/lib/crypto/sha3";
 import { ErrorCode, errWithMessage } from "/lib/node/error";
 
-/** @define {number} */
-const POW_EŞİĞİ = 20000;
-
 /**
  * @param {number} remoteTs
  * @param {number} localTsInMillis
@@ -21,13 +18,14 @@ const validateTimestamp = (remoteTs, localTsInMillis) => {
 
 /**
  * @param {!Uint8Array} commitPow
+ * @param {number} powThreshold
  * @return {?Response}
  */
-const validatePoW = (commitPow) => {
+const validatePoW = (commitPow, powThreshold) => {
   /** @const {number} */
   const digit = keccak256Uint32(new Uint32Array(commitPow.buffer))[0];
-  if (digit <= POW_EŞİĞİ) return null;
-  return errWithMessage(406, ErrorCode.INVALID_POW, ["" + digit, "" + POW_EŞİĞİ]);
+  if (digit <= powThreshold) return null;
+  return errWithMessage(406, ErrorCode.INVALID_POW, ["" + digit, "" + powThreshold]);
 }
 
 export { validateTimestamp, validatePoW };

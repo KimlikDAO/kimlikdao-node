@@ -3,7 +3,6 @@
 /** @const */
 const pdfjs = {};
 
-
 /**
  * @typedef {{
  *   items: !Array<{

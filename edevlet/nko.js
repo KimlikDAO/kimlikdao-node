@@ -76,7 +76,7 @@ const post = (req, param) => {
   // (3) Validate the commitment PoW.
   {
     /** @const {Response} */
-    const powError = validatePoW(commitPow);
+    const powError = validatePoW(commitPow, +param.KIMLIKDAO_POW_THRESHOLD);
     if (powError) return powError;
   }
 
@@ -138,7 +138,7 @@ const get = (req, param) => {
   // (2) Validate the commitment PoW.
   {
     /** @const {Response} */
-    const powError = validatePoW(commitPow);
+    const powError = validatePoW(commitPow, +param.KIMLIKDAO_POW_THRESHOLD);
     if (powError) return powError;
   }
 

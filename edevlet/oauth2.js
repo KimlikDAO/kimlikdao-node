@@ -60,9 +60,9 @@ const get = (req, param) => {
   /** @type {number} */
   const idx = req.url.indexOf("?");
   /** @const {!Uint8Array} */
-  const commitPow = base64ten(req.url.slice(idx + 1, idx + 55));
+  const commit = base64ten(req.url.slice(idx + 1, idx + 44));
   /** @const {!URLSearchParams} */
-  const searchParams = new URLSearchParams(req.url.slice(idx + 56));
+  const searchParams = new URLSearchParams(req.url.slice(idx + 45));
   /** @const {string} */
   const oauthCode = searchParams.get('oauth_code') || "";
   /** @const {number} */
@@ -76,8 +76,8 @@ const get = (req, param) => {
 
   // (3) Validate the commitment PoW.
   {
-    const powError = validatePoW(commitPow);
-    if (powError) return powError;
+    // const powError = validatePoW(commitPow);
+    // if (powError) return powError;
   }
 
   /** @const {oauth2.AccessTokenRequest} */
@@ -119,7 +119,7 @@ const get = (req, param) => {
       });
       signDecryptedSections(
         decryptedSections,
-        base64(commitPow.subarray(0, 32)),
+        base64(commit),
         remoteTs,
         1n // Don't sign mock data with actual keys
       );
