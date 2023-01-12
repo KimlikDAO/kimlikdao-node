@@ -117,7 +117,7 @@ const post = (req, param) => {
         ? Response.json(signedTckt, { headers: PRIVATE_HEADERS })
         : reject(ErrorCode.AUTHENTICATION_FAILURE))
     })
-    .catch((error) => errorResponse(/** @type {!HataBildirimi} */(error)));
+    .catch((error) => errorResponse(400, /** @type {!node.HataBildirimi} */(error)));
 }
 
 /**

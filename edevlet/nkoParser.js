@@ -194,6 +194,7 @@ const getValidatingTckt = (file, challenge, timeNow) => pdfjs.getDocument(file).
       if (documentAge > 86400_000)
         return reject(ErrorCode.DOCUMENT_EXPIRED, [Math.round(documentAge / 3600_000)]);
 
+      /** @const {!did.PersonInfo} */
       const personInfo = /** @const {!did.PersonInfo} */({
         first: "",
         last: "",
@@ -203,6 +204,7 @@ const getValidatingTckt = (file, challenge, timeNow) => pdfjs.getDocument(file).
         gender: "",
         exposureReportID: "",
       });
+      /** @const {!did.KütükBilgileri} */
       const kütükBilgileri = /** @const {!did.KütükBilgileri} */({
         il: "",
         ilçe: "",
@@ -216,12 +218,17 @@ const getValidatingTckt = (file, challenge, timeNow) => pdfjs.getDocument(file).
         mhali: "",
       });
 
+      /** @const {number} */
       const delta12 = (note1Y - note2Y) / 2;
+      /** @const {number} */
       const note1YLow = note1Y - delta12
+      /** @const {number} */
       const note1YHigh = note1Y + delta12;
-
+      /** @const {number} */
       const delta23 = (note2Y - note3Y) / 2;
+      /** @const {number} */
       const note2YLow = note2Y - delta23
+      /** @const {number} */
       const note2YHigh = note2Y + delta23;
 
       /** @type {boolean} */

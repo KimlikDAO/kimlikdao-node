@@ -11,7 +11,7 @@ const POW_EŞİĞİ = 20000;
  */
 const validateTimestamp = (remoteTs, localTsInMillis) => {
   /** @const {number} */
-  const localTs = ~~(localTsInMillis / 1000);
+  const localTs = localTsInMillis / 1000 | 0;
   if (localTs - 10 * 60 < remoteTs && remoteTs < localTs + 10 * 60)
     return null;
   return errWithMessage(409, ErrorCode.INVALID_TIMESTAMP, [

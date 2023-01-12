@@ -1,6 +1,7 @@
 build/edevlet/test/nkoParser.compiled-test.js: edevlet/test/nkoParser.compiled-test.js \
     edevlet/nkoParser.js \
     edevlet/pdf.d.js \
+    lib/did/exposureReport.d.js \
     lib/did/section.d.js lib/did/TCKTVerisi.d.js \
     lib/ethereum/jsonrpc.js lib/ethereum/provider.js \
     lib/ethereum/ERC721Unlockable.js \
