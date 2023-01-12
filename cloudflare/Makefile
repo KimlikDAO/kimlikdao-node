@@ -5,7 +5,7 @@ build/cloudflare/fullnode.js: cloudflare/fullnode.js \
     meetgreet/yo.d.js meetgreet/yo.js \
     ipfs/ipfs.d.js ipfs/ipfs.js \
     lib/api/oauth2.d.js \
-    lib/cloudflare/types.js lib/cloudflare/moduleWorker.js \
+    lib/cloudflare/types.d.js lib/cloudflare/moduleWorker.d.js \
     lib/crypto/sha3.js \
     lib/crypto/modular.js lib/crypto/secp256k1.js \
     lib/did/exposureReport.d.js lib/did/exposureReport.js \
@@ -37,7 +37,7 @@ build/cloudflare/fullnode.js: cloudflare/fullnode.js \
 build/cloudflare/lightnode.js: cloudflare/lightnode.js \
     index.d.js \
     ipfs/ipfs.d.js ipfs/ipfs.js \
-    lib/cloudflare/types.js lib/cloudflare/moduleWorker.js \
+    lib/cloudflare/types.d.js lib/cloudflare/moduleWorker.d.js \
     lib/node/error.d.js lib/node/error.js \
     lib/node/ipfs.js \
     lib/util/çevir.js
