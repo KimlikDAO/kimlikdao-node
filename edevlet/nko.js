@@ -1,4 +1,4 @@
-import { getValidatingTckt } from "./nkoParser";
+import { getValidatingTckt, ValidatingTckt } from "./nkoParser";
 import { validatePoW, validateTimestamp } from "./validation";
 import { keccak256Uint32 } from "/lib/crypto/sha3";
 import { generateReportID } from "/lib/did/exposureReport";
@@ -82,13 +82,13 @@ const post = (req, param) => {
 
   return req.formData()
     .then((/** @type {!FormData} */ form) => form.values().next().value.arrayBuffer())
-    .then((file) => getValidatingTckt(
+    .then((/** @type {!ArrayBuffer} */ file) => getValidatingTckt(
       new Uint8Array(file),
       getChallenge(
         commitPow.subarray(0, 32),
         param.KIMLIKDAO_PDF_CHALLENGE_SECRET),
       Date.now()))
-    .then((validatingTckt) => {
+    .then((/** @type {!ValidatingTckt} */ validatingTckt) => {
       /** @const {!did.PersonInfo} */
       const personInfo = /** @type {!did.PersonInfo} */(
         validatingTckt.tckt["personInfo"]);

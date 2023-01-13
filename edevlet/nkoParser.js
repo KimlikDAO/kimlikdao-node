@@ -115,13 +115,18 @@ const validateWithEDevlet = (userFile, barcode, tckn) => {
 };
 
 /**
+ * @typedef {{
+ *   tckt: !did.DecryptedSections,
+ *   validityCheck: !Promise<boolean>
+ * }}
+ */
+let ValidatingTckt;
+
+/**
  * @param {!Uint8Array} file pdf file to be parsed.
  * @param {string} challenge 9 digit challenge to be sought in the pdf file.
  * @param {number} timeNow The current unix timestamp.
- * @return {!Promise<{
- *   tckt: !did.DecryptedSections,
- *   validityCheck: !Promise<boolean>
- * }>}
+ * @return {!Promise<!ValidatingTckt>}
  */
 const getValidatingTckt = (file, challenge, timeNow) => pdfjs.getDocument(file).promise
   .then((/** @type {!pdfjs.PDFDocument} */ doc) => doc.getPage(1))
@@ -347,4 +352,4 @@ const getValidatingTckt = (file, challenge, timeNow) => pdfjs.getDocument(file).
     })
   });
 
-export { getValidatingTckt };
+export { getValidatingTckt, ValidatingTckt };

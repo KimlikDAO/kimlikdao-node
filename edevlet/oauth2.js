@@ -95,7 +95,7 @@ const get = (req, param) => {
       method: 'GET',
       headers: { 'Authorization': 'Bearer ' + body.access_token }
     }))
-    .then((res) => res.json())
+    .then((/** !Response */ res) => res.json())
     .then((data) => {
       /** @const {string} */
       const localIdNumber = "TR" + data["Temel-Bilgileri"]["TCKN"];
