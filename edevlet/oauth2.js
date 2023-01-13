@@ -1,4 +1,4 @@
-import { validatePoW, validateTimestamp } from "./validation";
+import { validateTimestamp } from "./validation";
 import { generateReportID } from "/lib/did/exposureReport";
 import { generateHumanID } from "/lib/did/humanID";
 import { signDecryptedSections } from "/lib/did/section";
@@ -6,9 +6,7 @@ import { err, ErrorCode } from "/lib/node/error";
 import { base64, base64ten } from "/lib/util/çevir";
 
 /** @const {string} */
-const TOKEN_SERVER_URL = "https://mock-oauth2.kimlikdao.net/token";
-/** @const {string} */
-const BILGI_SERVER_URL = "https://mock-oauth2.kimlikdao.net/bilgi";
+const EDEVLET_KAPISI = "https://mock-edevlet-kapisi.kimlikdao.net/";
 
 /**
  * Convert a local `nvi.TemelBilgileri` into a global `did.PersonInfo`.
@@ -76,24 +74,24 @@ const get = (req, param) => {
 
   // (3) Validate the commitment PoW.
   {
-    // const powError = validatePoW(commitPow);
+    // const powError = validatePoW(commitPow, param.KIMLIKDAO_POW_THRESHOLD);
     // if (powError) return powError;
   }
 
-  /** @const {oauth2.AccessTokenRequest} */
+  /** @const {!oauth2.AccessTokenRequest} */
   const tokenRequest = {
     grant_type: "authorization_code",
     code: oauthCode,
     client_id: param.NODE_EDEVLET_CLIENT_ID,
     client_secret: param.NODE_EDEVLET_CLIENT_SECRET,
   }
-  return fetch(TOKEN_SERVER_URL, {
+  return fetch(EDEVLET_KAPISI + "token", {
     method: 'POST',
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams(
       /** @type {!Object<string, string>} */(tokenRequest)).toString()
   }).then((res) => res.json())
-    .then((/** @type {oauth2.AccessToken} */ body) => fetch(BILGI_SERVER_URL, {
+    .then((/** @type {oauth2.AccessToken} */ body) => fetch(EDEVLET_KAPISI + "nvi/kisi", {
       method: 'GET',
       headers: { 'Authorization': 'Bearer ' + body.access_token }
     }))

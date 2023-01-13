@@ -12,9 +12,7 @@ build/cloudflare/fullnode.js: cloudflare/fullnode.js \
     lib/did/humanID.d.js lib/did/humanID.js \
     lib/did/section.d.js lib/did/section.js \
     lib/did/TCKTVerisi.d.js \
-    lib/ethereum/jsonrpc.js lib/ethereum/provider.js \
-    lib/ethereum/evm.js lib/ethereum/unlockables.js \
-    lib/ethereum/ERC721Unlockable.js \
+    lib/ethereum/*.js \
     lib/node/error.d.js lib/node/error.js \
     lib/node/nvi.d.js \
     lib/node/ipfs.js \
