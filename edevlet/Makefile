@@ -1,6 +1,6 @@
 include edevlet/test/Makefile
 
-build/edevlet/nkoParser.js: edevlet/nkoParser.js edevlet/pdf.d.js \
+build/edevlet/nkoParser.js: edevlet/nkoParser.js edevlet/pdfjs.d.js \
     lib/did/section.d.js lib/did/TCKTVerisi.d.js \
     lib/ethereum/jsonrpc.js lib/ethereum/provider.js \
     lib/ethereum/ERC721Unlockable.js \
@@ -18,7 +18,7 @@ build/edevlet/nkoParser.js: edevlet/nkoParser.js edevlet/pdf.d.js \
                              --js_output_file $@
 	yarn uglifyjs $@ -m -o $@
 
-build/edevlet/pdfCompiled.js: edevlet/pdfCompiled.js \
+build/edevlet/pdfjs.js: edevlet/pdfjs.js \
     edevlet/pdf.js/src/pdf.js \
     edevlet/pdf.js/src/shared/*.js edevlet/pdf.js/src/display/*.js \
     edevlet/pdf.js/src/core/*.js edevlet/pdf.js/src/core/xfa/*.js

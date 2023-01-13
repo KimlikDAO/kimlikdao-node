@@ -1,7 +1,7 @@
 build/cloudflare/fullnode.js: cloudflare/fullnode.js \
     index.js index.d.js \
     edevlet/oauth2.js edevlet/validation.js \
-    edevlet/nko.js edevlet/nkoParser.js edevlet/pdf.d.js \
+    edevlet/nko.js edevlet/nkoParser.js edevlet/pdfjs.d.js \
     meetgreet/yo.d.js meetgreet/yo.js \
     ipfs.js \
     lib/api/oauth2.d.js \
@@ -17,7 +17,7 @@ build/cloudflare/fullnode.js: cloudflare/fullnode.js \
     lib/node/nvi.d.js \
     lib/node/ipfs.js \
     lib/util/çevir.js \
-    build/edevlet/pdfCompiled.js
+    build/edevlet/pdfjs.js
 	mkdir -p $(dir $@)
 	yarn google-closure-compiler -W VERBOSE -O ADVANCED --charset UTF-8 \
                              --language_in ECMASCRIPT_NEXT \
@@ -25,11 +25,11 @@ build/cloudflare/fullnode.js: cloudflare/fullnode.js \
                              --dependency_mode PRUNE \
                              --assume_function_wrapper \
                              --entry_point $< \
-                             --js $(filter-out build/edevlet/pdfCompiled.js, $^) \
+                             --js $(filter-out build/edevlet/pdfjs.js, $^) \
                              --js_output_file $@.tmp
 	yarn uglifyjs $@.tmp -m -o $@.tmp
 	sed -i.bak 's/globalThis.Worker=/export default/g' $@.tmp
-	cat build/edevlet/pdfCompiled.js $@.tmp > $@
+	cat build/edevlet/pdfjs.js $@.tmp > $@
 
 build/cloudflare/lightnode.js: cloudflare/lightnode.js \
     index.d.js \

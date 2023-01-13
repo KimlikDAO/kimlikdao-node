@@ -1,13 +1,11 @@
 build/edevlet/test/nkoParser.compiled-test.js: edevlet/test/nkoParser.compiled-test.js \
     edevlet/nkoParser.js \
-    edevlet/pdf.d.js \
-    lib/did/exposureReport.d.js \
-    lib/did/section.d.js lib/did/TCKTVerisi.d.js \
-    lib/ethereum/jsonrpc.js lib/ethereum/provider.js \
-    lib/ethereum/ERC721Unlockable.js \
+    edevlet/pdfjs.d.js \
+    lib/did/*.d.js \
+    lib/ethereum/*.d.js \
     lib/node/error.js lib/node/error.d.js lib/node/nvi.d.js \
     lib/testing/fsPromises.d.js lib/testing/fsPromises.js \
-    build/edevlet/pdfCompiled.js
+    build/edevlet/pdfjs.js
 	mkdir -p $(dir $@)
 	yarn google-closure-compiler -W VERBOSE -O ADVANCED --charset UTF-8 \
                              --emit_use_strict \
@@ -15,8 +13,8 @@ build/edevlet/test/nkoParser.compiled-test.js: edevlet/test/nkoParser.compiled-t
                              --dependency_mode PRUNE \
                              --assume_function_wrapper \
                              --entry_point $< \
-                             --js $(filter-out build/edevlet/pdfCompiled.js, $^) \
+                             --js $(filter-out build/edevlet/pdfjs.js, $^) \
                              --js_output_file $@.tmp
 	yarn uglifyjs lib/testing/fsPromises.js $@.tmp -m -o $@.tmp
-	cat build/edevlet/pdfCompiled.js $@.tmp > $@
+	cat build/edevlet/pdfjs.js $@.tmp > $@
 	node $@

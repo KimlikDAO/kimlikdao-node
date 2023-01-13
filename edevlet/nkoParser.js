@@ -104,7 +104,6 @@ const validateWithEDevlet = (userFile, barcode, tckn) => {
             return false;
           for (let i = 0; i < len; ++i)
             if (edevletFile[i] != userFile[i]) return false;
-          console.log(`TCKT: ${tckn} geçti`);
           return true;
         })
     });
@@ -188,8 +187,7 @@ const getValidatingTckt = (file, challenge, timeNow) => pdfjs.getDocument(file).
       }
       const d = date.trim().split(/\s+/);
       d[0] = d[0].padStart(2, '0');
-      const documentDate = new Date(`${d[2]}-${MONTHS[d[1]]}-${d[0]}T${d[4]}:00.000+03:00`);
-      console.log("Time:", documentDate.getTime());
+      const documentDate = new Date(`${d[2]}-${MONTHS[d[1]]}-${d[0]}T${d[4]}:00.000+03:00`).getTime();
       const documentAge = timeNow - documentDate;
       if (documentAge > 86400_000)
         return reject(ErrorCode.DOCUMENT_EXPIRED, [Math.round(documentAge / 3600_000)]);
