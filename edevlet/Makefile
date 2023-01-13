@@ -1,13 +1,14 @@
 include edevlet/test/Makefile
 
 build/edevlet/nkoParser.js: edevlet/nkoParser.js edevlet/pdfjs.d.js \
-    lib/did/section.d.js lib/did/TCKTVerisi.d.js \
-    lib/ethereum/jsonrpc.js lib/ethereum/provider.js \
-    lib/ethereum/ERC721Unlockable.js \
+    lib/did/*.d.js \
+    lib/ethereum/*.d.js \
     lib/node/error.d.js lib/node/error.js \
     lib/node/nvi.d.js
 	mkdir -p $(dir $@)
 	yarn google-closure-compiler -W VERBOSE -O ADVANCED --charset UTF-8 \
+                             --jscomp_error=unusedLocalVariables \
+                             --jscomp_error=strictCheckTypes \
                              --emit_use_strict \
                              --language_in ECMASCRIPT_NEXT \
                              --module_resolution NODE \

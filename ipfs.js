@@ -7,8 +7,8 @@ import ipfs from '/lib/node/ipfs';
  * @return {!Promise<!Response>}
  */
 const add = (req, ctx, pst) => req.formData()
-  .then((form) => form.get("blob").arrayBuffer())
-  .then((file) => ipfs.hash(new Uint8Array(file))
+  .then((form) => /** @type {!File} */(form.get("blob")).arrayBuffer())
+  .then((/** @type {!ArrayBuffer} */ file) => ipfs.hash(new Uint8Array(file))
     .then((hash) => {
       /** @const {string} */
       const cid = ipfs.CID(hash);
@@ -32,7 +32,7 @@ const add = (req, ctx, pst) => req.formData()
 const get = (req, ctx, pst) => {
   /** @type {boolean} */
   let inCache = false;
-  /** @const {!Promise<Response>} */
+  /** @const {!Promise<!Response>} */
   const fromCache = pst.cache
     .match(req.url)
     .then((response) => {
@@ -42,7 +42,7 @@ const get = (req, ctx, pst) => {
     });
   /** @const {string} */
   const cid = req.url.slice(req.url.lastIndexOf("/") + 1);
-  /** @const {!Promise<Response>} */
+  /** @const {!Promise<!Response>} */
   const fromKV = pst.db.get(cid, 'arrayBuffer')
     .then((body) => {
       if (!body) return Promise.reject();

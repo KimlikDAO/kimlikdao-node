@@ -24,6 +24,5 @@ const Worker = {
   }
 };
 
-export default Worker;
-
 globalThis["Worker"] = Worker;
+export default Worker;

@@ -8,6 +8,8 @@ build/edevlet/test/nkoParser.compiled-test.js: edevlet/test/nkoParser.compiled-t
     build/edevlet/pdfjs.js
 	mkdir -p $(dir $@)
 	yarn google-closure-compiler -W VERBOSE -O ADVANCED --charset UTF-8 \
+                             --jscomp_error=unusedLocalVariables \
+                             --jscomp_error=strictCheckTypes \
                              --emit_use_strict \
                              --module_resolution NODE \
                              --dependency_mode PRUNE \

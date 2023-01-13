@@ -187,7 +187,9 @@ const getValidatingTckt = (file, challenge, timeNow) => pdfjs.getDocument(file).
       }
       const d = date.trim().split(/\s+/);
       d[0] = d[0].padStart(2, '0');
+      /** @const {number} */
       const documentDate = new Date(`${d[2]}-${MONTHS[d[1]]}-${d[0]}T${d[4]}:00.000+03:00`).getTime();
+      /** @const {number} */
       const documentAge = timeNow - documentDate;
       if (documentAge > 86400_000)
         return reject(ErrorCode.DOCUMENT_EXPIRED, [Math.round(documentAge / 3600_000)]);
@@ -238,8 +240,11 @@ const getValidatingTckt = (file, challenge, timeNow) => pdfjs.getDocument(file).
       /** @type {boolean} */
       let isAlive = false;
       for (let t of text.items) {
+        /** @const {number} */
         const x = 100 * t.transform[4] / viewport.width;
+        /** @const {number} */
         const y = 100 * t.transform[5] / viewport.height;
+        /** @const {string} */
         const str = t.str.trim();
         if (personY - 2 <= y && y <= personY + 2) {
           if (x <= 43) { // BSN, Cinsiyet, TCKN, Ad, Soyad
@@ -304,6 +309,7 @@ const getValidatingTckt = (file, challenge, timeNow) => pdfjs.getDocument(file).
         }
       }
       {
+        /** @const {number} */
         const idx = kütükBilgileri.ilçe.indexOf('(');
         if (idx != -1) {
           kütükBilgileri.ilçe = kütükBilgileri.ilçe.slice(0, idx);

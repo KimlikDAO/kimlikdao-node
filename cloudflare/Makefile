@@ -15,11 +15,13 @@ build/cloudflare/fullnode.js: cloudflare/fullnode.js \
     lib/ethereum/*.js \
     lib/node/error.d.js lib/node/error.js \
     lib/node/nvi.d.js \
-    lib/node/ipfs.js \
+    lib/node/ipfs.d.js lib/node/ipfs.js \
     lib/util/çevir.js \
     build/edevlet/pdfjs.js
 	mkdir -p $(dir $@)
 	yarn google-closure-compiler -W VERBOSE -O ADVANCED --charset UTF-8 \
+                             --jscomp_error=unusedLocalVariables \
+                             --jscomp_error=strictCheckTypes \
                              --language_in ECMASCRIPT_NEXT \
                              --module_resolution NODE \
                              --dependency_mode PRUNE \
@@ -36,10 +38,13 @@ build/cloudflare/lightnode.js: cloudflare/lightnode.js \
     ipfs.js \
     lib/cloudflare/types.d.js lib/cloudflare/moduleWorker.d.js \
     lib/node/error.d.js lib/node/error.js \
-    lib/node/ipfs.js \
+    lib/node/ipfs.d.js lib/node/ipfs.js \
     lib/util/çevir.js
 	mkdir -p $(dir $@)
 	yarn google-closure-compiler -W VERBOSE -O ADVANCED --charset UTF-8 \
+                             --jscomp_error=unusedLocalVariables \
+                             --jscomp_error=strictCheckTypes \
+                             --jscomp_warning=reportUnknownTypes \
                              --emit_use_strict \
                              --language_in ECMASCRIPT_NEXT \
                              --module_resolution NODE \
