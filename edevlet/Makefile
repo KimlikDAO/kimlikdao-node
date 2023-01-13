@@ -9,6 +9,7 @@ build/edevlet/nkoParser.js: edevlet/nkoParser.js edevlet/pdfjs.d.js \
 	yarn google-closure-compiler -W VERBOSE -O ADVANCED --charset UTF-8 \
                              --jscomp_error=unusedLocalVariables \
                              --jscomp_error=strictCheckTypes \
+                             --jscomp_warning=reportUnknownTypes \
                              --emit_use_strict \
                              --language_in ECMASCRIPT_NEXT \
                              --module_resolution NODE \

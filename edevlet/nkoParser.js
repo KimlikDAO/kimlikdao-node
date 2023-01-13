@@ -32,9 +32,12 @@ const canonicalCase = (str) => {
   if (!str) return "";
   /** @const {!Array<string>} */
   const strs = str.trim().split(/\s+/);
+  /** @type {string} */
   let out = "";
-  for (let s of strs) {
-    out += s[0].toUpperCase() + s.slice(1).replace('I', 'ı').replace('İ', 'i').toLowerCase() + " ";
+  for (let /** string */ s of strs) {
+    out += /** @type {string} */(s[0]).toUpperCase()
+      + s.slice(1).replace('I', 'ı').replace('İ', 'i').toLowerCase()
+      + " ";
   }
   return out.slice(0, -1);
 }
@@ -64,8 +67,8 @@ const validateWithEDevlet = (userFile, barcode, tckn) => {
             body: `sorgulananBarkod=${barcode}&token=%7B${token}%7D&btn=Devam+Et`
           })
         })
-        .then((res) => res.text())
-        .then((text) => {
+        .then((/** !Response */ res) => res.text())
+        .then((/** string */ text) => {
           const progressIdx = text.indexOf('aşamadasınız');
           console.log("HTML:" + text.slice(progressIdx - 30, progressIdx + 20));
           const idx = text.indexOf('data-token="{');
@@ -76,8 +79,8 @@ const validateWithEDevlet = (userFile, barcode, tckn) => {
             body: `ikinciAlan=${tckn}&token=%7B${token}%7D&btn=Devam+Et`
           })
         })
-        .then((res) => res.text())
-        .then((text) => {
+        .then((/** !Response */ res) => res.text())
+        .then((/** string */ text) => {
           const progressIdx = text.indexOf('aşamadasınız');
           console.log("HTML:" + text.slice(progressIdx - 30, progressIdx + 20));
           const idx = text.indexOf('data-token="{');
@@ -88,17 +91,19 @@ const validateWithEDevlet = (userFile, barcode, tckn) => {
             body: `chkOnay=1&token=%7B${token}%7D&btn=Devam+Et`
           })
         })
-        .then((res) => res.text())
-        .then((text) => {
+        .then((/** !Response */ res) => res.text())
+        .then((/** string */ text) => {
           const asamaidx = text.indexOf('aşamadasınız');
           console.log("HTML:", text.slice(asamaidx - 30, asamaidx + 20));
           return fetch(EDEVLET_URL + "/belge-dogrulama?belge=goster&goster=1", {
             headers: { 'cookie': cookie },
           })
         })
-        .then((res) => res.arrayBuffer())
-        .then((buff) => {
+        .then((/** !Response */ res) => res.arrayBuffer())
+        .then((/** !ArrayBuffer */ buff) => {
+          /** @const {!Uint8Array} */
           const edevletFile = new Uint8Array(buff);
+          /** @const {number} */
           const len = edevletFile.byteLength;
           if (len != userFile.byteLength)
             return false;
@@ -119,11 +124,12 @@ const validateWithEDevlet = (userFile, barcode, tckn) => {
  * }>}
  */
 const getValidatingTckt = (file, challenge, timeNow) => pdfjs.getDocument(file).promise
-  .then((doc) => doc.getPage(1))
+  .then((/** @type {!pdfjs.PDFDocument} */ doc) => doc.getPage(1))
   .catch(() => reject(ErrorCode.INCORRECT_FILE_FORMAT))
-  .then((page) => {
+  .then((/** @type {!pdfjs.PDFPage} */ page) => {
+    /** @const {!pdfjs.PageViewport} */
     const viewport = page.getViewport({ scale: 1.0 });
-    return page.getTextContent().then((text) => {
+    return page.getTextContent().then((/** @type {!pdfjs.TextContent} */ text) => {
       /** @type {number} */
       let notesY = -1;
       /** @type {number} */

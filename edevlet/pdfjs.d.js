@@ -11,62 +11,68 @@ const pdfjs = {};
  *   }>
  * }}
  */
-var TextContent;
+pdfjs.TextContent;
 
 /**
  * @constructor
  * @struct
  */
-function PageViewport() { }
+pdfjs.PageViewport = function () { }
 
 /** @const {number} */
-PageViewport.prototype.width;
+pdfjs.PageViewport.prototype.width;
 
 /** @const {number} */
-PageViewport.prototype.height;
+pdfjs.PageViewport.prototype.height;
 
 /**
+ * @see PDFPageProxy in pdf.js.
+ *
  * @constructor
  * @struct
  */
-function PDFPageProxy() { }
+pdfjs.PDFPage = function () { }
 
 /**
  * @param {{
  *   scale: number
  * }} params
- * @return {!PageViewport}
+ * @return {!pdfjs.PageViewport}
  */
-PDFPageProxy.prototype.getViewport = function (params) { };
+pdfjs.PDFPage.prototype.getViewport = function (params) { };
 
 /**
- * @return {!Promise<TextContent>}
+ * @return {!Promise<!pdfjs.TextContent>}
  */
-PDFPageProxy.prototype.getTextContent = function () { };
+pdfjs.PDFPage.prototype.getTextContent = function () { };
 
 /**
+ * @see PDFDocumentProxy in pdf.js.
+ *
  * @constructor
  * @struct
  */
-function PDFDocumentProxy() { }
+pdfjs.PDFDocument = function () { }
 
 /**
  * @param {number} page
- * @return {!Promise<PDFPageProxy>}
+ * @return {!Promise<!pdfjs.PDFPage>}
  */
-PDFDocumentProxy.prototype.getPage = function (page) { }
+pdfjs.PDFDocument.prototype.getPage = function (page) { }
 
 /**
+ * @see PDFDocumentLoadingTask in pdf.js
+ *
  * @interface
  * @struct
  */
-function PDFDocumentLoadingTask() { }
+pdfjs.PDFDocumentLoadingTask = function () { }
 
-/** @const {!Promise<PDFDocumentProxy>} */
-PDFDocumentLoadingTask.prototype.promise;
+/** @const {!Promise<!pdfjs.PDFDocument>} */
+pdfjs.PDFDocumentLoadingTask.prototype.promise;
 
 /**
  * @param {!Uint8Array} file
- * @return {!PDFDocumentLoadingTask}
+ * @return {!pdfjs.PDFDocumentLoadingTask}
  */
 pdfjs.getDocument = function (file) { }
