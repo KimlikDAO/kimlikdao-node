@@ -1,7 +1,6 @@
 import { validateTimestamp } from "./validation";
-import { generateReportID } from "/lib/did/exposureReport";
-import { generateHumanID } from "/lib/did/humanID";
 import { signDecryptedSections } from "/lib/did/section";
+import { generate } from "/lib/did/verifiableID";
 import { err, ErrorCode } from "/lib/node/error";
 import { base64, base64ten } from "/lib/util/çevir";
 
@@ -14,7 +13,7 @@ const EDEVLET_KAPISI = "https://mock-edevlet-kapisi.kimlikdao.net/";
  * The `exposureReportID` must be generated beforehand and supplied here.
  *
  * @param {!nvi.TemelBilgileri} kişi
- * @param {!did.ExposureReportID} exposureReportID
+ * @param {!did.VerifiableID} exposureReportID
  * @return {!did.PersonInfo}
  */
 const toPersonInfo = (kişi, exposureReportID) => /** @type {!did.PersonInfo} */({
@@ -99,8 +98,8 @@ const get = (req, param) => {
     .then((data) => {
       /** @const {string} */
       const localIdNumber = "TR" + data["Temel-Bilgileri"]["TCKN"];
-      /** @const {!did.ExposureReportID} */
-      const exposureReportID = generateReportID(
+      /** @const {!did.VerifiableID} */
+      const exposureReportID = generate(
         localIdNumber,
         param.KIMLIKDAO_EXPOSURE_ID_SECRET
       );
@@ -111,7 +110,7 @@ const get = (req, param) => {
         "kütükBilgileri":
           /** @type {!did.KütükBilgileri} */(data["Kutuk-Bilgileri"]),
         "addressInfo": fromTürkiyeAdresi(data["Adres-Bilgileri"]),
-        "humanID": generateHumanID(localIdNumber, param.KIMLIKDAO_HUMAN_ID_SECRET),
+        "humanID": generate(localIdNumber, param.KIMLIKDAO_HUMAN_ID_SECRET),
         "exposureReport": /** @type {!did.ExposureReport} */(
           Object.assign({}, exposureReportID))
       });

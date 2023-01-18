@@ -1,9 +1,8 @@
 import { getValidatingTckt, ValidatingTckt } from "./nkoParser";
 import { validatePoW, validateTimestamp } from "./validation";
 import { keccak256Uint32 } from "/lib/crypto/sha3";
-import { generateReportID } from "/lib/did/exposureReport";
-import { generateHumanID } from "/lib/did/humanID";
 import { signDecryptedSections } from "/lib/did/section";
+import { generate } from "/lib/did/verifiableID";
 import { err, ErrorCode, errorResponse, reject } from "/lib/node/error";
 import { base64, base64ten, uint8ArrayeBase64ten } from "/lib/util/çevir";
 
@@ -92,8 +91,8 @@ const post = (req, param) => {
       /** @const {!did.PersonInfo} */
       const personInfo = /** @type {!did.PersonInfo} */(
         validatingTckt.tckt["personInfo"]);
-      /** @const {!did.ExposureReportID} */
-      const exposureReportID = generateReportID(
+      /** @const {!did.VerifiableID} */
+      const exposureReportID = generate(
         personInfo.localIdNumber,
         param.KIMLIKDAO_EXPOSURE_ID_SECRET
       );
@@ -101,7 +100,7 @@ const post = (req, param) => {
       /** @const {!did.DecryptedSections} */
       const tckt = {
         ...validatingTckt.tckt,
-        "humanID": generateHumanID(personInfo.localIdNumber,
+        "humanID": generate(personInfo.localIdNumber,
           param.KIMLIKDAO_HUMAN_ID_SECRET),
         "exposureReport": /** @type {!did.ExposureReport} */(
           Object.assign({}, exposureReportID))

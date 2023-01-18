@@ -6,12 +6,10 @@ build/cloudflare/fullnode.js: cloudflare/fullnode.js \
     ipfs.js \
     lib/api/oauth2.d.js \
     lib/cloudflare/types.d.js lib/cloudflare/moduleWorker.d.js \
-    lib/crypto/sha3.js \
+    lib/crypto/sha3.js lib/crypto/wesolowski.js \
     lib/crypto/modular.js lib/crypto/secp256k1.js \
-    lib/did/exposureReport.d.js lib/did/exposureReport.js \
-    lib/did/humanID.d.js lib/did/humanID.js \
-    lib/did/section.d.js lib/did/section.js \
-    lib/did/TCKTVerisi.d.js \
+    lib/did/*.d.js \
+    lib/did/section.js lib/did/verifiableID.js \
     lib/ethereum/*.js \
     lib/node/error.d.js lib/node/error.js \
     lib/node/nvi.d.js \
