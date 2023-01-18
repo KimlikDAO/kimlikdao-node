@@ -9,7 +9,8 @@ build/cloudflare/fullnode.js: cloudflare/fullnode.js \
     lib/crypto/sha3.js lib/crypto/wesolowski.js \
     lib/crypto/modular.js lib/crypto/secp256k1.js \
     lib/did/*.d.js \
-    lib/did/section.js lib/did/verifiableID.js \
+    lib/did/section.js lib/did/decryptedSections.js \
+    lib/did/verifiableID.js \
     lib/ethereum/*.js \
     lib/node/error.d.js lib/node/error.js \
     lib/node/nvi.d.js \

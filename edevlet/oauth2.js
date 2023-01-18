@@ -1,5 +1,5 @@
 import { validateTimestamp } from "./validation";
-import { signDecryptedSections } from "/lib/did/section";
+import { sign } from "/lib/did/decryptedSections";
 import { generate } from "/lib/did/verifiableID";
 import { err, ErrorCode } from "/lib/node/error";
 import { base64, base64ten } from "/lib/util/çevir";
@@ -13,7 +13,7 @@ const EDEVLET_KAPISI = "https://mock-edevlet-kapisi.kimlikdao.net/";
  * The `exposureReportID` must be generated beforehand and supplied here.
  *
  * @param {!nvi.TemelBilgileri} kişi
- * @param {!did.VerifiableID} exposureReportID
+ * @param {string} exposureReportID
  * @return {!did.PersonInfo}
  */
 const toPersonInfo = (kişi, exposureReportID) => /** @type {!did.PersonInfo} */({
@@ -105,7 +105,7 @@ const get = (req, param) => {
       );
       /** @const {!did.DecryptedSections} */
       const decryptedSections = /** @type {!did.DecryptedSections} */({
-        "personInfo": toPersonInfo(data["Temel-Bilgileri"], exposureReportID),
+        "personInfo": toPersonInfo(data["Temel-Bilgileri"], exposureReportID.id),
         "contactInfo": toContactInfo(data["Iletisim-Bilgileri"]),
         "kütükBilgileri":
           /** @type {!did.KütükBilgileri} */(data["Kutuk-Bilgileri"]),
@@ -114,7 +114,7 @@ const get = (req, param) => {
         "exposureReport": /** @type {!did.ExposureReport} */(
           Object.assign({}, exposureReportID))
       });
-      signDecryptedSections(
+      sign(
         decryptedSections,
         base64(commit),
         remoteTs,
