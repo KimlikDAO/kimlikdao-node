@@ -18,7 +18,8 @@ build/edevlet/nkoParser.js: edevlet/nkoParser.js edevlet/pdfjs.d.js \
                              --entry_point $< \
                              --js $^ \
                              --js_output_file $@
-	yarn uglifyjs $@ -m -o $@
+	yarn uglifyjs $@ -m -c toplevel,unsafe -o $@
+	wc $@
 
 build/edevlet/pdfjs.js: edevlet/pdfjs.js \
     edevlet/pdf.js/src/pdf.js \
@@ -33,6 +34,7 @@ build/edevlet/pdfjs.js: edevlet/pdfjs.js \
                              --entry_point $< \
                              --js $^ \
                              --js_output_file $@.tmp
-	yarn uglifyjs $@.tmp -m -o $@.tmp
+	yarn uglifyjs $@.tmp -m -c toplevel,unsafe -o $@.tmp
 	printf "'use strict';(()=>{" | cat - $@.tmp > $@
 	printf "})();" >> $@
+	wc $@

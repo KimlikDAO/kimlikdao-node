@@ -28,9 +28,10 @@ build/cloudflare/fullnode.js: cloudflare/fullnode.js \
                              --entry_point $< \
                              --js $(filter-out build/edevlet/pdfjs.js, $^) \
                              --js_output_file $@.tmp
-	yarn uglifyjs $@.tmp -m -o $@.tmp
+	yarn uglifyjs $@.tmp -m -c toplevel,unsafe -o $@.tmp
 	sed -i.bak 's/globalThis.Worker=/export default/g' $@.tmp
 	cat build/edevlet/pdfjs.js $@.tmp > $@
+	wc $@
 
 build/cloudflare/lightnode.js: cloudflare/lightnode.js \
     index.d.js \
@@ -52,5 +53,6 @@ build/cloudflare/lightnode.js: cloudflare/lightnode.js \
                              --entry_point $< \
                              --js $^ \
                              --js_output_file $@
-	yarn uglifyjs $@ -m -o $@
+	yarn uglifyjs $@ -m -c toplevel,unsafe -o $@
 	sed -i.bak 's/globalThis.Worker=/export default/g' $@
+	wc $@

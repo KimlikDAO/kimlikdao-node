@@ -17,6 +17,6 @@ build/edevlet/test/nkoParser.compiled-test.js: edevlet/test/nkoParser.compiled-t
                              --entry_point $< \
                              --js $(filter-out build/edevlet/pdfjs.js, $^) \
                              --js_output_file $@.tmp
-	yarn uglifyjs lib/testing/fsPromises.js $@.tmp -m -o $@.tmp
+	yarn uglifyjs lib/testing/fsPromises.js $@.tmp -m -c toplevel,unsafe -o $@.tmp
 	cat build/edevlet/pdfjs.js $@.tmp > $@
 	node $@

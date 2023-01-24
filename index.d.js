@@ -67,7 +67,7 @@ Parameters.prototype.KIMLIKDAO_PDF_CHALLENGE_SECRET;
 
 /**
  * The secret used in the HumanID generation. This secret is propagated via
- * KimlikDAO protocol gossip to `TCKTSigners`.
+ * KimlikDAO protocol handshake to `TCKTSigners`.
  *
  * @type {string}
  */

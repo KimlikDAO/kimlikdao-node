@@ -91,29 +91,29 @@ const post = (req, param) => {
       /** @const {!did.PersonInfo} */
       const personInfo = /** @type {!did.PersonInfo} */(
         validatingTckt.tckt["personInfo"]);
-      /** @const {!did.VerifiableID} */
-      const exposureReportID = generate(
-        personInfo.localIdNumber,
-        param.KIMLIKDAO_EXPOSURE_ID_SECRET
-      );
-      personInfo.exposureReportID = exposureReportID.id;
-      /** @const {!did.DecryptedSections} */
-      const tckt = {
-        ...validatingTckt.tckt,
-        "humanID": generate(personInfo.localIdNumber,
-          param.KIMLIKDAO_HUMAN_ID_SECRET),
-        "exposureReport": /** @type {!did.ExposureReport} */(
-          Object.assign({}, exposureReportID))
-      }
-      /** @const {!did.DecryptedSections} */
-      const signedTckt = sign(
-        tckt,
-        base64(commitPow.subarray(0, 32)),
-        remoteTs,
-        BigInt("0x" + param.NODE_PRIVATE_KEY)
-      );
+
+      /** @const {!Promise<!Response>} */
+      const responsePromise = Promise.all([
+        generate(personInfo.localIdNumber, param.KIMLIKDAO_EXPOSURE_ID_SECRET),
+        generate(personInfo.localIdNumber, param.KIMLIKDAO_HUMAN_ID_SECRET),
+      ]).then(([exposureReportID, humanID]) => {
+        personInfo.exposureReportID = exposureReportID.id;
+        return Response.json(
+          sign({
+            ...validatingTckt.tckt,
+            "humanID": humanID,
+            "exposureReport": exposureReportID
+          },
+            base64(commitPow.subarray(0, 32)),
+            remoteTs,
+            BigInt("0x" + param.NODE_PRIVATE_KEY)
+          ),
+          { headers: PRIVATE_HEADERS }
+        );
+      });
+
       return validatingTckt.validityCheck.then((isValid) => isValid
-        ? Response.json(signedTckt, { headers: PRIVATE_HEADERS })
+        ? responsePromise
         : reject(ErrorCode.AUTHENTICATION_FAILURE))
     })
     .catch((error) => errorResponse(400, /** @type {!node.HataBildirimi} */(error)));

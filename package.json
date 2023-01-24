@@ -5,7 +5,7 @@
   "devDependencies": {
     "google-closure-compiler": "^20230103.0.0",
     "uglify-js": "^3.17.4",
-    "wrangler": "^2.8.0"
+    "wrangler": "^2.8.1"
   },
   "private": true
 }

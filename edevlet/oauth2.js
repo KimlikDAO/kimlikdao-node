@@ -7,6 +7,13 @@ import { base64, base64ten } from "/lib/util/çevir";
 /** @const {string} */
 const EDEVLET_KAPISI = "https://mock-edevlet-kapisi.kimlikdao.net/";
 
+/** @const {!Object<string, string>} */
+const PRIVATE_HEADERS = {
+  'content-type': 'application/json;charset=utf-8',
+  'access-control-allow-origin': '*',
+  'cache-control': 'private,no-cache',
+};
+
 /**
  * Convert a local `nvi.TemelBilgileri` into a global `did.PersonInfo`.
  *
@@ -98,34 +105,26 @@ const get = (req, param) => {
     .then((data) => {
       /** @const {string} */
       const localIdNumber = "TR" + data["Temel-Bilgileri"]["TCKN"];
-      /** @const {!did.VerifiableID} */
-      const exposureReportID = generate(
-        localIdNumber,
-        param.KIMLIKDAO_EXPOSURE_ID_SECRET
-      );
-      /** @const {!did.DecryptedSections} */
-      const decryptedSections = /** @type {!did.DecryptedSections} */({
-        "personInfo": toPersonInfo(data["Temel-Bilgileri"], exposureReportID.id),
-        "contactInfo": toContactInfo(data["Iletisim-Bilgileri"]),
-        "kütükBilgileri":
-          /** @type {!did.KütükBilgileri} */(data["Kutuk-Bilgileri"]),
-        "addressInfo": fromTürkiyeAdresi(data["Adres-Bilgileri"]),
-        "humanID": generate(localIdNumber, param.KIMLIKDAO_HUMAN_ID_SECRET),
-        "exposureReport": /** @type {!did.ExposureReport} */(
-          Object.assign({}, exposureReportID))
-      });
-      sign(
-        decryptedSections,
-        base64(commit),
-        remoteTs,
-        1n // Don't sign mock data with actual keys
-      );
-      return new Response(JSON.stringify(decryptedSections), {
-        headers: {
-          'content-type': 'application/json;charset=utf-8',
-          'access-control-allow-origin': '*'
-        }
-      });
+
+      return Promise.all([
+        generate(localIdNumber, param.KIMLIKDAO_EXPOSURE_ID_SECRET),
+        generate(localIdNumber, param.KIMLIKDAO_HUMAN_ID_SECRET),
+      ]).then(([exposureReportID, humanID]) => Response.json(
+        sign({
+          "personInfo": toPersonInfo(data["Temel-Bilgileri"], exposureReportID.id),
+          "contactInfo": toContactInfo(data["Iletisim-Bilgileri"]),
+          "kütükBilgileri":
+              /** @type {!did.KütükBilgileri} */(data["Kutuk-Bilgileri"]),
+          "addressInfo": fromTürkiyeAdresi(data["Adres-Bilgileri"]),
+          "humanID": humanID,
+          "exposureReport": exposureReportID
+        },
+          base64(commit),
+          remoteTs,
+          1n // Don't sign mock data with actual keys
+        ),
+        { headers: PRIVATE_HEADERS }
+      ));
     });
 }
 
