@@ -35,7 +35,7 @@ readdir('edevlet/testdata').then((files) => {
         getChallenge(fileName),
         getTime(fileName)))
       .then((validatingTckt) => validatingTckt
-        .validityCheck.then((isValid) => isValid ? JSON.stringify(validatingTckt.tckt): "Hata")
+        .validityCheck.then((isValid) => isValid ? JSON.stringify(validatingTckt.tckt) : "Hata")
       );
 
     return Promise.all([correctPromise, returnedPromise])

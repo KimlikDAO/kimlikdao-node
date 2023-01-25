@@ -61,9 +61,9 @@ const post = (req, param) => {
   /** @const {number} */
   const idx = req.url.indexOf('?');
   /** @const {!Uint8Array} */
-  const commitPow = base64ten(req.url.slice(idx + 1, idx + 55));
+  const commitPow = base64ten(req.url.slice(idx + 1, idx + 97));
   /** @const {number} */
-  const remoteTs = parseInt(req.url.slice(idx + 59), 10);
+  const remoteTs = parseInt(req.url.slice(idx + 101), 10);
 
   // (2) Validate the remote timestamp.
   {
@@ -105,6 +105,7 @@ const post = (req, param) => {
             "exposureReport": exposureReportID
           },
             base64(commitPow.subarray(0, 32)),
+            base64(commitPow.subarray(32, 64)),
             remoteTs,
             BigInt("0x" + param.NODE_PRIVATE_KEY)
           ),

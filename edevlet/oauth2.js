@@ -64,9 +64,9 @@ const get = (req, param) => {
   /** @type {number} */
   const idx = req.url.indexOf("?");
   /** @const {!Uint8Array} */
-  const commit = base64ten(req.url.slice(idx + 1, idx + 44));
+  const commitPow = base64ten(req.url.slice(idx + 1, idx + 97));
   /** @const {!URLSearchParams} */
-  const searchParams = new URLSearchParams(req.url.slice(idx + 45));
+  const searchParams = new URLSearchParams(req.url.slice(idx + 98));
   /** @const {string} */
   const oauthCode = searchParams.get('oauth_code') || "";
   /** @const {number} */
@@ -119,7 +119,8 @@ const get = (req, param) => {
           "humanID": humanID,
           "exposureReport": exposureReportID
         },
-          base64(commit),
+          base64(commitPow.subarray(0, 32)),
+          base64(commitPow.subarray(32, 64)),
           remoteTs,
           1n // Don't sign mock data with actual keys
         ),
