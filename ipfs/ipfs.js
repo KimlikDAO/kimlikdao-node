@@ -2,17 +2,17 @@ import ipfs from '/lib/node/ipfs';
 
 /**
  * @param {!Request} req
- * @param {!Context} ctx
- * @param {!Persistence} pst
+ * @param {!IpfsEnv} env
+ * @param {!cloudflare.Context} ctx
  * @return {!Promise<!Response>}
  */
-const add = (req, ctx, pst) => req.formData()
+const add = (req, env, ctx) => req.formData()
   .then((form) => /** @type {!File} */(form.get("blob")).arrayBuffer())
   .then((/** @type {!ArrayBuffer} */ file) => ipfs.hash(new Uint8Array(file))
     .then((hash) => {
       /** @const {string} */
       const cid = ipfs.CID(hash);
-      ctx.waitUntil(pst.db.put(cid, file));
+      ctx.waitUntil(env.KeyValue.put(cid, file));
       return new Response(`{"Hash":"${cid}"}`, {
         headers: {
           'content-type': 'application/json',
@@ -25,15 +25,15 @@ const add = (req, ctx, pst) => req.formData()
 
 /**
  * @param {!Request} req
- * @param {!Context} ctx
- * @param {!Persistence} pst
+ * @param {!IpfsEnv} env
+ * @param {!cloudflare.Context} ctx
  * @return {!Promise<!Response>}
  */
-const get = (req, ctx, pst) => {
+const get = (req, env, ctx) => {
   /** @type {boolean} */
   let inCache = false;
   /** @const {!Promise<!Response>} */
-  const fromCache = pst.cache
+  const fromCache = caches.default
     .match(req.url)
     .then((response) => {
       if (!response) return Promise.reject();
@@ -43,7 +43,7 @@ const get = (req, ctx, pst) => {
   /** @const {string} */
   const cid = req.url.slice(req.url.lastIndexOf("/") + 1);
   /** @const {!Promise<!Response>} */
-  const fromKV = pst.db.get(cid, 'arrayBuffer')
+  const fromKV = env.KeyValue.get(cid, 'arrayBuffer')
     .then((body) => {
       if (!body) return Promise.reject();
       /** @const {!Response} */
@@ -57,7 +57,7 @@ const get = (req, ctx, pst) => {
         }
       });
       ctx.waitUntil(Promise.resolve().then(() => {
-        if (!inCache) pst.cache.put(req.url, res.clone())
+        if (!inCache) caches.default.put(req.url, res.clone())
       }));
       return res;
     });

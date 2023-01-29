@@ -105,8 +105,11 @@ const validateWithEDevlet = (userFile, barcode, tckn) => {
           const edevletFile = new Uint8Array(buff);
           /** @const {number} */
           const len = edevletFile.byteLength;
-          if (len != userFile.byteLength)
+          if (len != userFile.byteLength) {
+            console.error("Edevlet'ten gelen dosya boyu != yüklenen dosya boyu",
+              len, userFile.byteLength);
             return false;
+          }
           for (let i = 0; i < len; ++i)
             if (edevletFile[i] != userFile[i]) return false;
           return true;

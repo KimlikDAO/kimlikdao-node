@@ -1,13 +1,13 @@
 
 /**
  * @param {!Request} req
- * @param {!Parameters} param
+ * @param {!YoEnv} env
  * @return {!Response}
  */
-const get = (req, param) => {
+const yo = (req, env) => {
   return Response.json(/** @type {!YoBack} */({
-    address: param.NODE_EVM_ADDRESS
+    address: env.NODE_EVM_ADDRESS
   }));
 }
 
-export default { get };
+export { yo };

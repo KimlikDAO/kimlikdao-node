@@ -1,0 +1,27 @@
+name = "kimlikdao-node"
+main = "build/signerNode.js"
+compatibility_date = "2023-01-01"
+workers_dev = false
+usage_model = "bundled"
+no_bundle = true
+minify = false
+send_metrics = false
+node_compat = false
+
+[route]
+pattern = "node.kimlikdao.org"
+custom_domain = true
+
+[vars]
+KIMLIKDAO_POW_THRESHOLD = "20000"
+
+[[kv_namespaces]]
+binding = "KeyValue"
+id = "52b51a1db0ce4508a144633d407dab93"
+preview_id = "1698646e36364585a5721f5b8c9697dd"
+
+[durable_objects]
+bindings = [
+  { name = "NkoWorker", class_name = "NkoWorker" },
+  { name = "OAuth2Worker", class_name = "OAuth2Worker" },
+]

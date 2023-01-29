@@ -20,3 +20,4 @@ build/edevlet/test/nkoParser.compiled-test.js: edevlet/test/nkoParser.compiled-t
 	yarn uglifyjs lib/testing/fsPromises.js $@.tmp -m -c toplevel,unsafe -o $@.tmp
 	cat build/edevlet/pdfjs.js $@.tmp > $@
 	node $@
+	wc $@

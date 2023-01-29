@@ -34,7 +34,7 @@ build/edevlet/pdfjs.js: edevlet/pdfjs.js \
                              --entry_point $< \
                              --js $^ \
                              --js_output_file $@.tmp
-	yarn uglifyjs $@.tmp -m -c toplevel,unsafe -o $@.tmp
+	yarn uglifyjs $@.tmp -m -c toplevel,unsafe,drop_console -o $@.tmp
 	printf "'use strict';(()=>{" | cat - $@.tmp > $@
 	printf "})();" >> $@
 	wc $@
