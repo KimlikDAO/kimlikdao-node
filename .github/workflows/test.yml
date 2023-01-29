@@ -21,7 +21,12 @@ jobs:
         with:
           node-version: 18
 
-      - name: Run Google Closure Compiled tests
+      - name: Build signerNode
         run: |
           yarn
-          make
+          make build/signerNode.js
+
+      - name: Build lightNode
+        run: |
+          yarn
+          make build/lightNode.js
