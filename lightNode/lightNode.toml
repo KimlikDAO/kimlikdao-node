@@ -1,7 +1,7 @@
 # This is a template toml file. Make sure to update kv_namespace id
 # and the route.
 name = "kimlikdao-ipfs"
-main = "build/lightNode.js"
+main = "../build/lightNode.js"
 compatibility_date = "2023-01-01"
 workers_dev = false
 usage_model = "bundled"

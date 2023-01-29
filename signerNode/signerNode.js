@@ -19,8 +19,13 @@ const pathname = (url) => {
   return url.startsWith("/ipfs") ? "/ipfs" : url;
 }
 
+/**
+ * @implements {cloudflare.ModuleWorker}
+ */
 const SignerNodeWorker = {
   /**
+   * @override
+   *
    * @param {!Request} req
    * @param {!cloudflare.Environment} env
    * @param {!cloudflare.Context} ctx
@@ -70,8 +75,10 @@ const SignerNodeWorker = {
   }
 };
 
-globalThis["NkoWorker"] = NkoWorker;
-globalThis["OAuth2Worker"] = OAuth2Worker;
+globalThis["exports"] = {
+  "NkoWorker": NkoWorker,
+  "OAuth2Worker": OAuth2Worker
+}
 globalThis["SignerNodeWorker"] = SignerNodeWorker;
 export {
   NkoWorker,

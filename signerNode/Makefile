@@ -29,6 +29,7 @@ build/signerNode.js: signerNode/signerNode.js signerNode/signerNode.d.js \
                              --js $(filter-out build/edevlet/pdfjs.js, $^) \
                              --js_output_file $@.tmp
 	yarn uglifyjs $@.tmp -m -c toplevel,unsafe -o $@.tmp
-	sed -i.bak 's/globalThis.SignerNodeWorker=/export default/g' $@.tmp
+	sed -i.bak 's/globalThis.SignerNodeWorker=/export default /g' $@.tmp
+	sed -i.bak 's/globalThis.exports=/export /g' $@.tmp
 	cat build/edevlet/pdfjs.js $@.tmp > $@
 	wc $@

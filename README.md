@@ -61,7 +61,13 @@ NODE_EDEVLET_CLIENT_ID = ""
 NODE_EDEVLET_CLIENT_SECRET = ""
 ```
 
-Set the above variables and run the `signerNode.js`. Your node will <!--
+Set the above variables and edit `signerNode/signerNode.toml` to update the KV id <!--
+-->and the worker route. Once you are done, you can deploy the node using
+```shell
+make build/signerNode.js
+wrangler publish -c signerNode/signerNode.toml
+```
+Your node will <!--
 -->discover other nodes and request the network parameters from them. If you <!--
 -->have been approved by the DAO vote, you'll be registered in the <!--
 -->[TCKTSigners](https://github.com/KimlikDAO/TCKT/blob/main/contracts/TCKTSigners.sol) <!--

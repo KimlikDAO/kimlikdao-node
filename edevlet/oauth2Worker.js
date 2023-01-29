@@ -59,6 +59,8 @@ const fromTürkiyeAdresi = (trAdresi) => {
  */
 class OAuth2Worker {
   /**
+   * @override
+   *
    * @param {!cloudflare.DurableObject.State} _
    * @param {!cloudflare.Environment} env
    */
@@ -79,6 +81,8 @@ class OAuth2Worker {
   }
 
   /**
+   * @override
+   *
    * @param {!Request} req
    * @return {!Promise<!Response>|!Response}
    */

@@ -63,6 +63,8 @@ const getChallenge = (commitArray, nkoChallengeSecret) => {
  */
 class NkoWorker {
   /**
+   * @override
+   *
    * @param {!cloudflare.DurableObject.State} _
    * @param {!cloudflare.Environment} env
    */
@@ -83,6 +85,8 @@ class NkoWorker {
   }
 
   /**
+   * @override
+   *
    * @param {!Request} req
    * @return {!Promise<!Response>|!Response}
    */
