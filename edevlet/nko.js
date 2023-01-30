@@ -66,22 +66,20 @@ class NkoWorker {
    * @override
    *
    * @param {!cloudflare.DurableObject.State} _
-   * @param {!cloudflare.Environment} env
+   * @param {!NkoEnv} env
    */
   constructor(_, env) {
-    /** @const {!NkoEnv} */
-    const nkoEnv = /** @type {!NkoEnv} */(env);
     /** @const {string} */
-    this.challengeSecret = nkoEnv.KIMLIKDAO_NKO_CHALLENGE_SECRET;
+    this.challengeSecret = env.KIMLIKDAO_NKO_CHALLENGE_SECRET;
     /** @const {number} */
-    this.powThreshold = +nkoEnv.KIMLIKDAO_POW_THRESHOLD;
+    this.powThreshold = +env.KIMLIKDAO_POW_THRESHOLD;
     /** @const {!bigint} */
-    this.privateKey = BigInt("0x" + nkoEnv.NODE_PRIVATE_KEY);
+    this.privateKey = BigInt("0x" + env.NODE_PRIVATE_KEY);
 
     /** @const {!cloudflare.ModuleWorkerStub} */
-    this.HumanIDWorker = nkoEnv.HumanIDWorker;
+    this.HumanIDWorker = env.HumanIDWorker;
     /** @const {!cloudflare.ModuleWorkerStub} */
-    this.ExposureReportWorker = nkoEnv.ExposureReportWorker;
+    this.ExposureReportWorker = env.ExposureReportWorker;
   }
 
   /**
@@ -163,10 +161,10 @@ class NkoWorker {
 
 /**
  * @param {!Request} req
- * @param {!NkoEnv} nkoEnv
+ * @param {!NkoEnv} env
  * @return {!Promise<!Response>|!Response}
  */
-const getCommitment = (req, nkoEnv) => {
+const getCommitment = (req, env) => {
   if (req.method !== "GET")
     return err(405, ErrorCode.INVALID_REQUEST);
 
@@ -179,7 +177,7 @@ const getCommitment = (req, nkoEnv) => {
   // (2) Validate the commitment PoW.
   {
     /** @const {Response} */
-    const powError = validatePoW(commitPow, +nkoEnv.KIMLIKDAO_POW_THRESHOLD);
+    const powError = validatePoW(commitPow, +env.KIMLIKDAO_POW_THRESHOLD);
     if (powError) return powError;
   }
 
@@ -187,7 +185,7 @@ const getCommitment = (req, nkoEnv) => {
   return new Promise((resolve) => setTimeout(() => resolve(
     new Response(getChallenge(
       commitPow.subarray(0, 32),
-      nkoEnv.KIMLIKDAO_NKO_CHALLENGE_SECRET
+      env.KIMLIKDAO_NKO_CHALLENGE_SECRET
     ), { headers: STATIC_HEADERS })), 1000));
 }
 

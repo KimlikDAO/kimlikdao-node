@@ -69,7 +69,7 @@ wrangler publish -c signerNode/signerNode.toml
 ```
 Your node will <!--
 -->discover other nodes and request the network parameters from them. If you <!--
--->have been approved by the DAO vote, you'll be registered in the <!--
+-->have been approved by the DAO vote, your nodes EVM address be registered in the <!--
 -->[TCKTSigners](https://github.com/KimlikDAO/TCKT/blob/main/contracts/TCKTSigners.sol) <!--
 -->contract and your node will be able to prove its identity. Once that happens, <!--
 -->you should start getting some requests from the KimlikDAO dApps.

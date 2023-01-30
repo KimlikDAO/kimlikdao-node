@@ -25,3 +25,11 @@ bindings = [
   { name = "NkoWorker", class_name = "NkoWorker" },
   { name = "OAuth2Worker", class_name = "OAuth2Worker" },
 ]
+
+[[services]]
+binding = "ExposureReportWorker"
+service = "kimlikdao-node-exposurereport-worker"
+
+[[services]]
+binding = "HumanIDWorker"
+service = "kimlikdao-node-humanid-worker"

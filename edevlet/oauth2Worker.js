@@ -62,22 +62,18 @@ class OAuth2Worker {
    * @override
    *
    * @param {!cloudflare.DurableObject.State} _
-   * @param {!cloudflare.Environment} env
+   * @param {!OAuth2WorkerEnv} env
    */
   constructor(_, env) {
     /** @const {string} */
-    this.edevletClientId =
-      /** @type {!OAuth2WorkerEnv} */(env).NODE_EDEVLET_CLIENT_ID;
+    this.edevletClientId = env.NODE_EDEVLET_CLIENT_ID;
     /** @const {string} */
-    this.edevletClientSecret =
-      /** @type {!OAuth2WorkerEnv} */(env).NODE_EDEVLET_CLIENT_SECRET;
+    this.edevletClientSecret = env.NODE_EDEVLET_CLIENT_SECRET;
 
     /** @const {!cloudflare.ModuleWorkerStub} */
-    this.HumanIDWorker =
-      /** @type {!OAuth2WorkerEnv} */(env).HumanIDWorker;
+    this.HumanIDWorker = env.HumanIDWorker;
     /** @const {!cloudflare.ModuleWorkerStub} */
-    this.ExposureReportWorker =
-      /** @type {!OAuth2WorkerEnv} */(env).ExposureReportWorker;
+    this.ExposureReportWorker = env.ExposureReportWorker;
   }
 
   /**
