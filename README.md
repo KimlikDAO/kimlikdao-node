@@ -63,18 +63,20 @@ NODE_EDEVLET_CLIENT_SECRET = ""
 
 Set the above variables and edit `signerNode/signerNode.toml` to update the KV id <!--
 -->and the worker route. Once you are done, you can deploy the node using
+
 ```shell
 make build/signerNode.js
 wrangler publish -c signerNode/signerNode.toml
 ```
+
 Your node will <!--
 -->discover other nodes and request the network parameters from them. If you <!--
--->have been approved by the DAO vote, your nodes EVM address be registered in the <!--
+-->have been approved by the DAO vote, your nodes EVM address will be registered in the <!--
 -->[TCKTSigners](https://github.com/KimlikDAO/TCKT/blob/main/contracts/TCKTSigners.sol) <!--
 -->contract and your node will be able to prove its identity. Once that happens, <!--
 -->you should start getting some requests from the KimlikDAO dApps.
 
-
+![Signer Node Workers Architecture](/.github/img/SignerNodeWorkers.png?raw=true "Signer Node Workers Architecture")
 ## Endpoints
 
 | File         | Example REST endpoints         | Purpose                                       |
