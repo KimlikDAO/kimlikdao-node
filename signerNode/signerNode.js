@@ -75,10 +75,8 @@ const SignerNodeWorker = {
   }
 };
 
-globalThis["exports"] = {
-  "NkoWorker": NkoWorker,
-  "OAuth2Worker": OAuth2Worker
-}
+globalThis["NkoWorker"] = NkoWorker;
+globalThis["OAuth2Worker"] = OAuth2Worker;
 globalThis["SignerNodeWorker"] = SignerNodeWorker;
 export {
   NkoWorker,

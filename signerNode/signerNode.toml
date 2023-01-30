@@ -26,6 +26,10 @@ bindings = [
   { name = "OAuth2Worker", class_name = "OAuth2Worker" },
 ]
 
+[[migrations]]
+tag = "v1"
+new_classes = ["NkoWorker", "OAuth2Worker"]
+
 [[services]]
 binding = "ExposureReportWorker"
 service = "kimlikdao-node-exposurereport-worker"
