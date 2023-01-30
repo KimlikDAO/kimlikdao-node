@@ -28,7 +28,8 @@ wrangler publish -c lightNode/lightNode.toml
 To run a signer node, first you need
 
 1. A computer (for the rust client) or a Clouflare Workers account <!--
-   -->(for the javascript + wasm client) with Durable Objects enabled.
+   -->(for the javascript + wasm client) with Durable Objects enabled. <!--
+   -->(Durable Objects are needed only until Cloudflare Smart Placements rolls out)
 2. The required amount of [TCKO](https://github.com/KimlikDAO/TCKO)s to stake.
 3. Optionally, if you want to enable the email verification endpoint, <!--
    -->a domain name and in the case of the rust client a static IP (this <!--
@@ -77,11 +78,12 @@ Your node will <!--
 -->you should start getting some requests from the KimlikDAO dApps.
 
 ![Signer Node Workers Architecture](/.github/img/SignerNodeWorkers.png?raw=true "Signer Node Workers Architecture")
+
 ## Endpoints
 
-| File         | Example REST endpoints         | Purpose                                       |
+| Directory    | Example REST endpoints         | Purpose                                       |
 | ------------ | ------------------------------ | --------------------------------------------- |
 | `/meetgreet` | `/yo`                          | Node discovery / gossip                       |
 | `/edevlet`   | `/edevlet/oauth2`              | Get `did.DecryptedSections` via edevlet oauth |
 | `/hint`      | `/hint/revokees`               | Hints for evm node lookups                    |
-| `ipfs.js`    | GET `/ipfs`, PUT `/api/v0/add` | Persistence layer                             |
+| `/ipfs`      | GET `/ipfs`, PUT `/api/v0/add` | Persistence layer                             |
