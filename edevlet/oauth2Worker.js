@@ -51,38 +51,20 @@ const fromTürkiyeAdresi = (trAdresi) => {
 }
 
 /**
- * OAuth2Worker responsible for creating `did.DecryptedSection`s via an edevlet
- * authentication. Since there is no way to hint workers to a specific data
- * center, we use Durable Objects instead.
+ * OAuth2Worker creates a `did.DecryptedSections` from a valid e-devlet
+ * authorization code.
  *
- * @implements {cloudflare.DurableObject}
+ * @implements {cloudflare.ModuleWorker}
  */
-class OAuth2Worker {
-  /**
-   * @override
-   *
-   * @param {!cloudflare.DurableObject.State} _
-   * @param {!OAuth2WorkerEnv} env
-   */
-  constructor(_, env) {
-    /** @const {string} */
-    this.edevletClientId = env.NODE_EDEVLET_CLIENT_ID;
-    /** @const {string} */
-    this.edevletClientSecret = env.NODE_EDEVLET_CLIENT_SECRET;
-
-    /** @const {!cloudflare.ModuleWorkerStub} */
-    this.HumanIDWorker = env.HumanIDWorker;
-    /** @const {!cloudflare.ModuleWorkerStub} */
-    this.ExposureReportWorker = env.ExposureReportWorker;
-  }
-
+const OAuth2Worker = {
   /**
    * @override
    *
    * @param {!Request} req
+   * @param {!OAuth2WorkerEnv} env
    * @return {!Promise<!Response>|!Response}
    */
-  fetch(req) {
+  fetch(req, env) {
     if (req.method !== "GET")
       return err(405, ErrorCode.INVALID_REQUEST);
 
@@ -114,9 +96,9 @@ class OAuth2Worker {
     const tokenRequest = {
       grant_type: "authorization_code",
       code: oauthCode,
-      client_id: this.edevletClientId,
-      client_secret: this.edevletClientSecret,
-    }
+      client_id: env.NODE_EDEVLET_CLIENT_ID,
+      client_secret: env.NODE_EDEVLET_CLIENT_SECRET,
+    };
     return fetch(EDEVLET_KAPISI + "token", {
       method: 'POST',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
@@ -133,11 +115,13 @@ class OAuth2Worker {
         const localIdNumber = "TR" + data["Temel-Bilgileri"]["TCKN"];
 
         /** @const {!Promise<!did.VerifiableID>} */
-        const exposureReportPromise = this.ExposureReportWorker.fetch("http://a/" + localIdNumber)
-          .then((res) => res.json());
+        const exposureReportPromise = env.ExposureReportWorker.fetch("https://a/", {
+          body: localIdNumber
+        }).then((res) => res.json());
         /** @const {!Promise<!did.VerifiableID>} */
-        const humanIDPromise = this.HumanIDWorker.fetch("http://a/" + localIdNumber)
-          .then((res) => res.json());
+        const humanIDPromise = env.HumanIDWorker.fetch("https://a/", {
+          body: localIdNumber
+        }).then((res) => res.json());
 
         return Promise.all([exposureReportPromise, humanIDPromise])
           .then(([exposureReport, humanID]) => Response.json(
@@ -153,7 +137,7 @@ class OAuth2Worker {
               base64(commitPow.subarray(0, 32)),
               base64(commitPow.subarray(32, 64)),
               remoteTs,
-              // this.privateKey
+              // env.NODE_PRIVATE_KEY
               1n // Don't sign mock data with actual keys
             ),
             { headers: PRIVATE_HEADERS }
@@ -162,4 +146,5 @@ class OAuth2Worker {
   }
 }
 
-export { OAuth2Worker };
+globalThis["OAuth2Worker"] = OAuth2Worker;
+export default OAuth2Worker;

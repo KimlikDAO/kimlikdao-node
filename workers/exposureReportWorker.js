@@ -18,14 +18,11 @@ const ExposureReportWorker = {
     if (!GenerateKeyPromise)
       GenerateKeyPromise = prepareGenerateKey(env.KIMLIKDAO_EXPOSUREREPORT_SECRET);
 
-    /** @const {number} */
-    const idx = req.url.slice(8).indexOf("/");
-    /** @const {string} */
-    const personKey = req.url.slice(idx + 9);
-
-    return GenerateKeyPromise
-      .then((/** @type {!webCrypto.CryptoKey} */ generateKey) =>
-        generate(personKey, generateKey))
+    return Promise.all([req.text(), GenerateKeyPromise])
+      .then(([
+        /** @type {string} */ personKey,
+        /** @type {!webCrypto.CryptoKey} */ generateKey
+      ]) => generate(personKey, generateKey))
       .then(Response.json);
   }
 };

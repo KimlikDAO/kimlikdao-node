@@ -1,0 +1,20 @@
+name = "kimlikdao-node-oauth2-worker"
+main = "../build/oauth2Worker.js"
+compatibility_date = "2023-01-01"
+workers_dev = false
+usage_model = "bundled"
+no_bundle = true
+minify = false
+send_metrics = false
+node_compat = false
+
+[vars]
+KIMLIKDAO_POW_THRESHOLD = "20000"
+
+[[services]]
+binding = "ExposureReportWorker"
+service = "kimlikdao-node-exposurereport-worker"
+
+[[services]]
+binding = "HumanIDWorker"
+service = "kimlikdao-node-humanid-worker"

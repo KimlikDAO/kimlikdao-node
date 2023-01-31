@@ -6,10 +6,10 @@
  * @interface
  * @extends {cloudflare.Environment}
  */
-function SignerEnv() {}
+function SignerEnv() { }
 
-/** @const {!cloudflare.DurableObjectBinding} */
+/** @const {!cloudflare.ModuleWorkerStub} */
 SignerEnv.prototype.NkoWorker;
 
-/** @const {!cloudflare.DurableObjectBinding} */
+/** @const {!cloudflare.ModuleWorkerStub} */
 SignerEnv.prototype.OAuth2Worker;

@@ -7,6 +7,7 @@ no_bundle = true
 minify = false
 send_metrics = false
 node_compat = false
+logpush = false
 
 [route]
 pattern = "node.kimlikdao.org"
@@ -20,20 +21,10 @@ binding = "KeyValue"
 id = "52b51a1db0ce4508a144633d407dab93"
 preview_id = "1698646e36364585a5721f5b8c9697dd"
 
-[durable_objects]
-bindings = [
-  { name = "NkoWorker", class_name = "NkoWorker" },
-  { name = "OAuth2Worker", class_name = "OAuth2Worker" },
-]
-
-[[migrations]]
-tag = "v1"
-new_classes = ["NkoWorker", "OAuth2Worker"]
+[[services]]
+binding = "NkoWorker"
+service = "kimlikdao-node-nko-worker"
 
 [[services]]
-binding = "ExposureReportWorker"
-service = "kimlikdao-node-exposurereport-worker"
-
-[[services]]
-binding = "HumanIDWorker"
-service = "kimlikdao-node-humanid-worker"
+binding = "OAuth2Worker"
+service = "kimlikdao-node-oauth2-worker"
