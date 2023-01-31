@@ -1,5 +1,6 @@
 import { validateTimestamp } from "./validation";
 import { sign } from "/lib/did/decryptedSections";
+import { generate, prepareGenerateKey } from "/lib/did/verifiableID";
 import { err, ErrorCode } from "/lib/node/error";
 import { base64, base64ten } from "/lib/util/çevir";
 
@@ -7,11 +8,16 @@ import { base64, base64ten } from "/lib/util/çevir";
 const EDEVLET_KAPISI = "https://mock-edevlet-kapisi.kimlikdao.net/";
 
 /** @const {!Object<string, string>} */
-const PRIVATE_HEADERS = {
+const HEADERS = {
   'content-type': 'application/json;charset=utf-8',
   'access-control-allow-origin': '*',
   'cache-control': 'private,no-cache',
 };
+
+/** @type {Promise<!webCrypto.CryptoKey>} */
+let ExposureReportKeyPromise;
+/** @type {Promise<!webCrypto.CryptoKey>} */
+let HumanIDKeyPromise;
 
 /**
  * Convert a local `nvi.TemelBilgileri` into a global `did.PersonInfo`.
@@ -114,14 +120,16 @@ const OAuth2Worker = {
         /** @const {string} */
         const localIdNumber = "TR" + data["Temel-Bilgileri"]["TCKN"];
 
+        if (!ExposureReportKeyPromise)
+          ExposureReportKeyPromise = prepareGenerateKey(env.KIMLIKDAO_EXPOSUREREPORT_SECRET);
+        if (!HumanIDKeyPromise)
+          HumanIDKeyPromise = prepareGenerateKey(env.KIMLIKDAO_HUMANID_SECRET);
         /** @const {!Promise<!did.VerifiableID>} */
-        const exposureReportPromise = env.ExposureReportWorker.fetch("https://a/", {
-          body: localIdNumber
-        }).then((res) => res.json());
+        const exposureReportPromise = ExposureReportKeyPromise
+          .then((generateKey) => generate(localIdNumber, generateKey));
         /** @const {!Promise<!did.VerifiableID>} */
-        const humanIDPromise = env.HumanIDWorker.fetch("https://a/", {
-          body: localIdNumber
-        }).then((res) => res.json());
+        const humanIDPromise = HumanIDKeyPromise
+          .then((generateKey) => generate(localIdNumber, generateKey))
 
         return Promise.all([exposureReportPromise, humanIDPromise])
           .then(([exposureReport, humanID]) => Response.json(
@@ -140,11 +148,10 @@ const OAuth2Worker = {
               // env.NODE_PRIVATE_KEY
               1n // Don't sign mock data with actual keys
             ),
-            { headers: PRIVATE_HEADERS }
+            { headers: HEADERS }
           ));
       });
   }
 }
 
-globalThis["OAuth2Worker"] = OAuth2Worker;
 export default OAuth2Worker;

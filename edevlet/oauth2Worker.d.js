@@ -26,6 +26,12 @@ OAuth2WorkerEnv.prototype.NODE_EDEVLET_CLIENT_SECRET;
  */
 OAuth2WorkerEnv.prototype.NODE_PRIVATE_KEY;
 
+/** @const {string} */
+OAuth2WorkerEnv.prototype.KIMLIKDAO_EXPOSUREREPORT_SECRET;
+
+/** @const {string} */
+OAuth2WorkerEnv.prototype.KIMLIKDAO_HUMANID_SECRET;
+
 /** @const {!cloudflare.ModuleWorkerStub} */
 OAuth2WorkerEnv.prototype.HumanIDWorker;
 

@@ -34,6 +34,12 @@ NkoEnv.prototype.KIMLIKDAO_POW_THRESHOLD;
  */
 NkoEnv.prototype.NODE_PRIVATE_KEY;
 
+/** @const {string} */
+NkoEnv.prototype.KIMLIKDAO_EXPOSUREREPORT_SECRET;
+
+/** @const {string} */
+NkoEnv.prototype.KIMLIKDAO_HUMANID_SECRET;
+
 /** @const {!cloudflare.ModuleWorkerStub} */
 NkoEnv.prototype.HumanIDWorker;
 

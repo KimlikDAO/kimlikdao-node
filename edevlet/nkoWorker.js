@@ -2,6 +2,7 @@ import { generateCommitment } from "./nko";
 import { getValidatingTckt, ValidatingTckt } from "./nkoParser";
 import { validatePoW, validateTimestamp } from "./validation";
 import { sign } from "/lib/did/decryptedSections";
+import { generate, prepareGenerateKey } from "/lib/did/verifiableID";
 import { err, ErrorCode, errorResponse, reject } from "/lib/node/error";
 import { base64, base64ten } from "/lib/util/çevir";
 
@@ -11,6 +12,11 @@ const HEADERS = {
   'access-control-allow-origin': '*',
   'cache-control': 'private,no-cache',
 };
+
+/** @type {Promise<!webCrypto.CryptoKey>} */
+let ExposureReportKeyPromise;
+/** @type {Promise<!webCrypto.CryptoKey>} */
+let HumanIDKeyPromise;
 
 /**
  * Given a NKO (Nüfus kayıt örneği), parses the NKO, validates it against
@@ -66,16 +72,16 @@ const NkoWorker = {
         const personInfo = /** @type {!did.PersonInfo} */(
           validatingTckt.tckt["personInfo"]);
 
+        if (!ExposureReportKeyPromise)
+          ExposureReportKeyPromise = prepareGenerateKey(env.KIMLIKDAO_EXPOSUREREPORT_SECRET);
+        if (!HumanIDKeyPromise)
+          HumanIDKeyPromise = prepareGenerateKey(env.KIMLIKDAO_HUMANID_SECRET);
         /** @const {!Promise<!did.VerifiableID>} */
-        const exposureReportPromise = env.ExposureReportWorker.fetch("https://a/", {
-          method: "POST",
-          body: personInfo.localIdNumber
-        }).then((res) => res.json());
+        const exposureReportPromise = ExposureReportKeyPromise
+          .then((generateKey) => generate(personInfo.localIdNumber, generateKey));
         /** @const {!Promise<!did.VerifiableID>} */
-        const humanIDPromise = env.HumanIDWorker.fetch("https://a/", {
-          method: "POST",
-          body: personInfo.localIdNumber
-        }).then((res) => res.json());
+        const humanIDPromise = HumanIDKeyPromise
+          .then((generateKey) => generate(personInfo.localIdNumber, generateKey))
 
         /** @const {!Promise<!Response>} */
         const responsePromise = Promise.all([exposureReportPromise, humanIDPromise])
@@ -104,5 +110,4 @@ const NkoWorker = {
   }
 }
 
-globalThis["NkoWorker"] = NkoWorker;
-export { NkoWorker };
+export default NkoWorker;
