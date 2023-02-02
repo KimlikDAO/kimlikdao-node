@@ -66,8 +66,7 @@ Set the above variables and edit `signerNode/signerNode.toml` to update the KV i
 -->and the worker route. Once you are done, you can deploy the node using
 
 ```shell
-make build/signerNode.js
-wrangler publish -c signerNode/signerNode.toml
+make build/signerNode.deployment
 ```
 
 Your node will <!--

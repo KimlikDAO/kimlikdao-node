@@ -1,6 +1,3 @@
-name = "kimlikdao-node"
-main = "../build/signerNode.js"
-compatibility_date = "2023-01-01"
 workers_dev = false
 usage_model = "bundled"
 no_bundle = true

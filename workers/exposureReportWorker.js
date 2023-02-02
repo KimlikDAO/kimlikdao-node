@@ -1,5 +1,8 @@
 import { generate, prepareGenerateKey } from "../lib/did/verifiableID";
 
+/** @define {string} */
+const BEARER_TOKEN = "BEARER_TOKEN_PLACEHOLDER";
+
 /** @type {Promise<!webCrypto.CryptoKey>} */
 let GenerateKeyPromise;
 
@@ -12,9 +15,12 @@ const ExposureReportWorker = {
    *
    * @param {!Request} req
    * @param {!ExposureReportEnv} env
-   * @return {!Promise<!Response>}
+   * @return {!Promise<!Response>|!Response}
    */
   fetch(req, env) {
+    if (req.headers.get("authorization").slice(7) != BEARER_TOKEN)
+      return Response.error();
+
     if (!GenerateKeyPromise)
       GenerateKeyPromise = prepareGenerateKey(env.KIMLIKDAO_EXPOSUREREPORT_SECRET);
 

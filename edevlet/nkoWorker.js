@@ -12,6 +12,15 @@ const HEADERS = {
   'cache-control': 'private,no-cache',
 };
 
+/** @define {string} */
+const WORKER_NAME = "kimlikdao-node";
+
+/** @define {string} */
+const CF_ACCOUNT_NAME = "kimlikdao";
+
+/** @define {string} */
+const BEARER_TOKEN = "BEARER_TOKEN_PLACEHOLDER";
+
 /**
  * Given a NKO (Nüfus kayıt örneği), parses the NKO, validates it against
  * e-devlet and signs it.
@@ -67,19 +76,24 @@ const NkoWorker = {
           validatingTckt.tckt["personInfo"]);
 
         /** @const {!Promise<!did.VerifiableID>} */
-        const exposureReportPromise = env.ExposureReportWorker.fetch("https://a/", {
+        const exposureReportPromise = fetch(
+          `https://${WORKER_NAME}-exposurereport-worker.${CF_ACCOUNT_NAME}.workers.dev`, {
           method: "POST",
+          headers: { "authorization": "Bearer " + BEARER_TOKEN },
           body: personInfo.localIdNumber
         }).then((res) => res.json());
         /** @const {!Promise<!did.VerifiableID>} */
-        const humanIDPromise = env.HumanIDWorker.fetch("https://a/", {
+        const humanIDPromise = fetch(
+          `https://${WORKER_NAME}-humanid-worker.${CF_ACCOUNT_NAME}.workers.dev`, {
           method: "POST",
+          headers: { "authorization": "Bearer " + BEARER_TOKEN },
           body: personInfo.localIdNumber
         }).then((res) => res.json());
 
         /** @const {!Promise<!Response>} */
         const responsePromise = Promise.all([exposureReportPromise, humanIDPromise])
           .then(([exposureReport, humanID]) => {
+            console.log("Exposure here", exposureReport, humanID);
             personInfo.exposureReportID = exposureReport.id;
             return Response.json(
               sign({

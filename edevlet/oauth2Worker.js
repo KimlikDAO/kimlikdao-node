@@ -3,15 +3,27 @@ import { sign } from "/lib/did/decryptedSections";
 import { err, ErrorCode } from "/lib/node/error";
 import { base64, base64ten } from "/lib/util/çevir";
 
-/** @const {string} */
+/**
+ * @const {string}
+ * @noinline
+ */
 const EDEVLET_KAPISI = "https://mock-edevlet-kapisi.kimlikdao.net/";
 
 /** @const {!Object<string, string>} */
-const PRIVATE_HEADERS = {
+const HEADERS = {
   'content-type': 'application/json;charset=utf-8',
   'access-control-allow-origin': '*',
   'cache-control': 'private,no-cache',
 };
+
+/** @define {string} */
+const WORKER_NAME = "kimlikdao-node";
+
+/** @define {string} */
+const CF_ACCOUNT_NAME = "kimlikdao";
+
+/** @define {string} */
+const BEARER_TOKEN = "BEARER_TOKEN_PLACEHOLDER";
 
 /**
  * Convert a local `nvi.TemelBilgileri` into a global `did.PersonInfo`.
@@ -115,11 +127,17 @@ const OAuth2Worker = {
         const localIdNumber = "TR" + data["Temel-Bilgileri"]["TCKN"];
 
         /** @const {!Promise<!did.VerifiableID>} */
-        const exposureReportPromise = env.ExposureReportWorker.fetch("https://a/", {
+        const exposureReportPromise = fetch(
+          `https://${WORKER_NAME}-exposurereport-worker.${CF_ACCOUNT_NAME}.workers.dev`, {
+          method: "POST",
+          headers: { "authorization": "Bearer " + BEARER_TOKEN },
           body: localIdNumber
         }).then((res) => res.json());
         /** @const {!Promise<!did.VerifiableID>} */
-        const humanIDPromise = env.HumanIDWorker.fetch("https://a/", {
+        const humanIDPromise = fetch(
+          `https://${WORKER_NAME}-humanid-worker.${CF_ACCOUNT_NAME}.workers.dev`, {
+          method: "POST",
+          headers: { "authorization": "Bearer " + BEARER_TOKEN },
           body: localIdNumber
         }).then((res) => res.json());
 
@@ -140,7 +158,7 @@ const OAuth2Worker = {
               // env.NODE_PRIVATE_KEY
               1n // Don't sign mock data with actual keys
             ),
-            { headers: PRIVATE_HEADERS }
+            { headers: HEADERS }
           ));
       });
   }

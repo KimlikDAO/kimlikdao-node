@@ -1,7 +1,15 @@
+include signerNode/signerNode.config
+
+WORKER_NAME = $(subst $\",,$(CF_WORKER_NAME))
+
 include edevlet/Makefile
 include lightNode/Makefile
 include signerNode/Makefile
 include workers/Makefile
+
+build/BEARER_TOKEN:
+	mkdir -p $(dir $@)
+	xxd -u -l 16 -p /dev/urandom > $@
 
 .PHONY: clean
 clean:

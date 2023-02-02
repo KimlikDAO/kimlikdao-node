@@ -25,9 +25,3 @@ OAuth2WorkerEnv.prototype.NODE_EDEVLET_CLIENT_SECRET;
  * @const {string}
  */
 OAuth2WorkerEnv.prototype.NODE_PRIVATE_KEY;
-
-/** @const {!cloudflare.ModuleWorkerStub} */
-OAuth2WorkerEnv.prototype.HumanIDWorker;
-
-/** @const {!cloudflare.ModuleWorkerStub} */
-OAuth2WorkerEnv.prototype.ExposureReportWorker;

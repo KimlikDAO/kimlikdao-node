@@ -22,3 +22,19 @@ build/signerNode.js: signerNode/signerNode.js signerNode/signerNode.d.js \
 	yarn uglifyjs $@ -m -c toplevel,unsafe -o $@
 	sed -i.bak 's/globalThis.SignerNodeWorker=/export default /g' $@
 	wc $@
+
+build/signerNode.toml: signerNode/signerNode.toml signerNode/signerNode.config
+	mkdir -p $(dir $@)
+	sed -e "s/kimlikdao-node/$(WORKER_NAME)/g" \
+        -e "s/node.kimlikdao.org/$(NODE_URL)/g" \
+        -e 's/"52b51a1db0ce4508a144633d407dab93"/$(CF_KV_NAMESPACE_ID)/g' \
+        $< > $@
+	cat $@
+
+build/signerNode.deployment: build/signerNode.js build/signerNode.toml \
+    build/nkoWorker.deployment \
+    build/oauth2Worker.deployment
+	yarn wrangler publish $< --name $(WORKER_NAME) \
+        --compatibility-date $(shell date +%Y-%m-%d) \
+        --config build/signerNode.toml
+	touch $@

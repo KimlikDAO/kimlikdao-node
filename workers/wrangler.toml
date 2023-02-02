@@ -1,9 +1,7 @@
-workers_dev = false
+workers_dev = true
 usage_model = "unbound"
 no_bundle = true
 minify = false
 send_metrics = false
 node_compat = false
-
-[vars]
-KIMLIKDAO_POW_THRESHOLD = "20000"
+logpush = false

@@ -48,9 +48,13 @@ build/oauth2Worker.js: edevlet/oauth2Worker.js edevlet/oauth2Worker.d.js \
     lib/did/*.d.js lib/did/section.js lib/did/decryptedSections.js \
     lib/ethereum/*.d.js lib/ethereum/evm.js lib/ethereum/unlockable.js \
     lib/node/error.d.js lib/node/error.js lib/node/nvi.d.js \
-    lib/util/çevir.js
+    lib/util/çevir.js \
+    build/BEARER_TOKEN
 	mkdir -p $(dir $@)
 	yarn google-closure-compiler -W VERBOSE -O ADVANCED --charset UTF-8 \
+                             --define "BEARER_TOKEN\$$\$$module\$$edevlet\$$oauth2Worker=$(shell cat build/BEARER_TOKEN)" \
+                             --define "CF_ACCOUNT_NAME\$$\$$module\$$edevlet\$$oauth2Worker=$(CF_ACCOUNT_NAME)" \
+                             --define "WORKER_NAME\$$\$$module\$$edevlet\$$oauth2Worker=$(WORKER_NAME)" \
                              --jscomp_error=unusedLocalVariables \
                              --jscomp_error=strictCheckTypes \
                              --language_in ECMASCRIPT_NEXT \
@@ -58,7 +62,7 @@ build/oauth2Worker.js: edevlet/oauth2Worker.js edevlet/oauth2Worker.d.js \
                              --dependency_mode PRUNE \
                              --assume_function_wrapper \
                              --entry_point $< \
-                             --js $^ \
+                             --js $(filter %.js, $^) \
                              --js_output_file $@
 	yarn uglifyjs $@ -m -c toplevel,unsafe,drop_console -o $@
 	sed -i.bak 's/globalThis.OAuth2Worker=/export default/g' $@
@@ -74,9 +78,13 @@ build/nkoWorker.js: edevlet/nkoWorker.js \
     lib/ethereum/*.d.js lib/ethereum/evm.js lib/ethereum/unlockable.js \
     lib/node/error.d.js lib/node/error.js lib/node/nvi.d.js \
     lib/util/çevir.js \
-    build/edevlet/pdfjs.js
+    build/edevlet/pdfjs.js \
+    build/BEARER_TOKEN
 	mkdir -p $(dir $@)
 	yarn google-closure-compiler -W VERBOSE -O ADVANCED --charset UTF-8 \
+                             --define "BEARER_TOKEN\$$\$$module\$$edevlet\$$nkoWorker=$(shell cat build/BEARER_TOKEN)" \
+                             --define "CF_ACCOUNT_NAME\$$\$$module\$$edevlet\$$nkoWorker=$(CF_ACCOUNT_NAME)" \
+                             --define "WORKER_NAME\$$\$$module\$$edevlet\$$nkoWorker=$(WORKER_NAME)" \
                              --jscomp_error=unusedLocalVariables \
                              --jscomp_error=strictCheckTypes \
                              --language_in ECMASCRIPT_NEXT \
@@ -84,9 +92,27 @@ build/nkoWorker.js: edevlet/nkoWorker.js \
                              --dependency_mode PRUNE \
                              --assume_function_wrapper \
                              --entry_point $< \
-                             --js $(filter-out build/edevlet/pdfjs.js, $^) \
+                             --js $(filter-out build/edevlet/pdfjs.js, $(filter %.js, $^)) \
                              --js_output_file $@.tmp
-	yarn uglifyjs $@.tmp -m -c toplevel,unsafe,drop_console -o $@.tmp
+	yarn uglifyjs $@.tmp -m -c toplevel,unsafe -o $@.tmp
 	sed -i.bak 's/globalThis.NkoWorker=/export default/g' $@.tmp
 	cat build/edevlet/pdfjs.js $@.tmp > $@
 	wc $@
+
+build/nkoWorker.deployment: build/nkoWorker.js edevlet/nkoWorker.toml \
+    signerNode/signerNode.config \
+    build/exposureReportWorker.deployment \
+    build/humanIDWorker.deployment
+	yarn wrangler publish $< --name $(WORKER_NAME)-nko-worker \
+        --compatibility-date $(shell date +%Y-%m-%d) \
+        --config edevlet/nkoWorker.toml
+	touch $@
+
+build/oauth2Worker.deployment: build/oauth2Worker.js edevlet/nkoWorker.toml \
+    signerNode/signerNode.config \
+    build/exposureReportWorker.deployment \
+    build/humanIDWorker.deployment
+	yarn wrangler publish $< --name $(WORKER_NAME)-oauth2-worker \
+        --compatibility-date $(shell date +%Y-%m-%d) \
+        --config edevlet/oauth2Worker.toml
+	touch $@
