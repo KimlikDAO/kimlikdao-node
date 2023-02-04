@@ -28,8 +28,7 @@ wrangler publish -c lightNode/lightNode.toml
 To run a signer node, first you need
 
 1. A computer (for the rust client) or a Clouflare Workers account <!--
-   -->(for the javascript + wasm client) with Durable Objects enabled. <!--
-   -->(Durable Objects are needed only until Cloudflare Smart Placements rolls out)
+   -->(for the javascript + wasm client).
 2. The required amount of [TCKO](https://github.com/KimlikDAO/TCKO)s to stake.
 3. Optionally, if you want to enable the email verification endpoint, <!--
    -->a domain name and in the case of the rust client a static IP (this <!--
@@ -62,8 +61,8 @@ NODE_EDEVLET_CLIENT_ID = ""
 NODE_EDEVLET_CLIENT_SECRET = ""
 ```
 
-Set the above variables and edit `signerNode/signerNode.toml` to update the KV id <!--
--->and the worker route. Once you are done, you can deploy the node using
+Set the above variables and edit `signerNode/signerNode.config` to update <!--
+-->the KV id and the worker route. Once you are done, you can deploy the node using
 
 ```shell
 make build/signerNode.deployment

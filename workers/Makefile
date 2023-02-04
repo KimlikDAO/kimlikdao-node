@@ -19,7 +19,7 @@ build/exposureReportWorker.js: workers/exposureReportWorker.js \
                              --entry_point $< \
                              --js $(filter %.js, $^) \
                              --js_output_file $@
-	yarn uglifyjs $@ -m -c toplevel,unsafe -o $@
+	yarn uglifyjs $@ -m -c toplevel,unsafe,drop_console -o $@
 	sed -i.bak 's/globalThis.ExposureReportWorker=/export default/g' $@
 	wc $@
 
@@ -44,7 +44,7 @@ build/humanIDWorker.js: workers/humanIDWorker.js \
                              --entry_point $< \
                              --js $(filter %.js, $^) \
                              --js_output_file $@
-	yarn uglifyjs $@ -m -c toplevel,unsafe -o $@
+	yarn uglifyjs $@ -m -c toplevel,unsafe,drop_console -o $@
 	sed -i.bak 's/globalThis.HumanIDWorker=/export default/g' $@
 	wc $@
 

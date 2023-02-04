@@ -94,7 +94,7 @@ build/nkoWorker.js: edevlet/nkoWorker.js \
                              --entry_point $< \
                              --js $(filter-out build/edevlet/pdfjs.js, $(filter %.js, $^)) \
                              --js_output_file $@.tmp
-	yarn uglifyjs $@.tmp -m -c toplevel,unsafe -o $@.tmp
+	yarn uglifyjs $@.tmp -m -c toplevel,unsafe,drop_console -o $@.tmp
 	sed -i.bak 's/globalThis.NkoWorker=/export default/g' $@.tmp
 	cat build/edevlet/pdfjs.js $@.tmp > $@
 	wc $@

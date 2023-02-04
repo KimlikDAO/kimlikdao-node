@@ -93,7 +93,6 @@ const NkoWorker = {
         /** @const {!Promise<!Response>} */
         const responsePromise = Promise.all([exposureReportPromise, humanIDPromise])
           .then(([exposureReport, humanID]) => {
-            console.log("Exposure here", exposureReport, humanID);
             personInfo.exposureReportID = exposureReport.id;
             return Response.json(
               sign({
