@@ -44,7 +44,7 @@ const SignerNodeWorker = {
       // IPFS endpoints have access to the persistence layer.
       // Note the IPFS data is fully encrypted on the user side by user private
       // keys.
-      // Still, we cease persisting data belonging to a revoked did. This ensures
+      // Still, we cease persisting data belonging to a revoked DID. This ensures
       // that the user can always delete their persisted data on demand (even
       // though we can never see it since it's encrpted by the user private
       // keys).

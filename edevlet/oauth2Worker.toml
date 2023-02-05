@@ -4,6 +4,7 @@ no_bundle = true
 minify = false
 send_metrics = false
 node_compat = false
+logpush = false
 
 [vars]
 KIMLIKDAO_POW_THRESHOLD = "20000"

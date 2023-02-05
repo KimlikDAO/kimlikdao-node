@@ -18,7 +18,7 @@ build/edevlet/nkoParser.js: edevlet/nkoParser.js edevlet/pdfjs.d.js \
                              --entry_point $< \
                              --js $^ \
                              --js_output_file $@
-	yarn uglifyjs $@ -m -c toplevel,unsafe -o $@
+	yarn uglifyjs $@ -m -c toplevel,unsafe,drop_console -o $@
 	wc $@
 
 build/edevlet/pdfjs.js: edevlet/pdfjs.js \

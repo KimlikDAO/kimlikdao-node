@@ -25,8 +25,13 @@ const BEARER_TOKEN = "BEARER_TOKEN_PLACEHOLDER";
  * Given a NKO (Nüfus kayıt örneği), parses the NKO, validates it against
  * e-devlet and signs it.
  *
- * The input data is processed and sent back to the user withouut ever saving
+ * The input data is processed and sent back to the user without ever saving
  * it to disk or any other persistence layer.
+ *
+ * One can verify in `nkoWorker.toml` that this worker has no access to any
+ * persistence. Besides e-devlet, it makes 2 `fetch()`'es to `HumanIDWorker`
+ * and `ExposureReportWorker`, which are also stateless and has no access
+ * to persistence.
  *
  * @implements {cloudflare.ModuleWorker}
  */

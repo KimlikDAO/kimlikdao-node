@@ -19,8 +19,8 @@ build/signerNode.js: signerNode/signerNode.js signerNode/signerNode.d.js \
                              --entry_point $< \
                              --js $^ \
                              --js_output_file $@
-	yarn uglifyjs $@ -m -c toplevel,unsafe -o $@
-	sed -i.bak 's/globalThis.SignerNodeWorker=/export default /g' $@
+	yarn uglifyjs $@ -m -c toplevel,unsafe,drop_console -o $@
+	sed -i.bak 's/globalThis.SignerNodeWorker=/export default/g' $@
 	wc $@
 
 build/signerNode.toml: signerNode/signerNode.toml signerNode/signerNode.config
