@@ -1,5 +1,4 @@
 workers_dev = false
-usage_model = "bundled"
 no_bundle = true
 minify = false
 send_metrics = false

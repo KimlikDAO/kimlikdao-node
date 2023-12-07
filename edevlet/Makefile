@@ -1,6 +1,7 @@
 include edevlet/test/Makefile
 
 build/edevlet/nkoParser.js: edevlet/nkoParser.js edevlet/pdfjs.d.js \
+    lib/crosschain/*.d.js \
     lib/did/*.d.js \
     lib/ethereum/*.d.js \
     lib/node/error.d.js lib/node/error.js \
@@ -43,10 +44,11 @@ build/oauth2Worker.js: edevlet/oauth2Worker.js edevlet/oauth2Worker.d.js \
     edevlet/validation.js \
     lib/api/oauth2.d.js \
     lib/cloudflare/types.d.js lib/cloudflare/moduleWorker.d.js \
+    lib/crosschain/*.js \
     lib/crypto/sha3.js \
     lib/crypto/modular.js lib/crypto/secp256k1.js \
     lib/did/*.d.js lib/did/section.js lib/did/decryptedSections.js \
-    lib/ethereum/*.d.js lib/ethereum/evm.js lib/ethereum/unlockable.js \
+    lib/ethereum/*.d.js lib/ethereum/evm.js \
     lib/node/error.d.js lib/node/error.js lib/node/nvi.d.js \
     lib/util/çevir.js \
     build/BEARER_TOKEN
@@ -72,10 +74,11 @@ build/nkoWorker.js: edevlet/nkoWorker.js \
     edevlet/nko.d.js edevlet/nko.js edevlet/validation.js \
     edevlet/nkoParser.js edevlet/pdfjs.d.js \
     lib/cloudflare/types.d.js lib/cloudflare/moduleWorker.d.js \
+    lib/crosschain/*.js \
     lib/crypto/sha3.js \
     lib/crypto/modular.js lib/crypto/secp256k1.js \
     lib/did/*.d.js lib/did/section.js lib/did/decryptedSections.js \
-    lib/ethereum/*.d.js lib/ethereum/evm.js lib/ethereum/unlockable.js \
+    lib/ethereum/*.d.js lib/ethereum/evm.js \
     lib/node/error.d.js lib/node/error.js lib/node/nvi.d.js \
     lib/util/çevir.js \
     build/edevlet/pdfjs.js \

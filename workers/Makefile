@@ -51,7 +51,7 @@ build/humanIDWorker.js: workers/humanIDWorker.js \
 build/exposureReportWorker.deployment: build/exposureReportWorker.js \
     workers/wrangler.toml \
     signerNode/signerNode.config
-	yarn wrangler publish $< --name $(WORKER_NAME)-exposurereport-worker \
+	yarn wrangler deploy $< --name $(WORKER_NAME)-exposurereport-worker \
         --compatibility-date $(shell date +%Y-%m-%d) \
         --config workers/wrangler.toml
 	touch $@
@@ -59,7 +59,7 @@ build/exposureReportWorker.deployment: build/exposureReportWorker.js \
 build/humanIDWorker.deployment: build/humanIDWorker.js \
     workers/wrangler.toml \
     signerNode/signerNode.config
-	yarn wrangler publish $< --name $(WORKER_NAME)-humanid-worker \
+	yarn wrangler deploy $< --name $(WORKER_NAME)-humanid-worker \
         --compatibility-date $(shell date +%Y-%m-%d) \
         --config workers/wrangler.toml
 	touch $@
