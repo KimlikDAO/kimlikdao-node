@@ -35,6 +35,6 @@ build/signerNode.deployment: build/signerNode.js build/signerNode.toml \
     build/nkoWorker.deployment \
     build/oauth2Worker.deployment
 	yarn wrangler deploy $< --name $(WORKER_NAME) \
-        --compatibility-date $(shell date +%Y-%m-%d) \
+        --compatibility-date $(shell date -v -1d +%Y-%m-%d) \
         --config build/signerNode.toml
 	touch $@

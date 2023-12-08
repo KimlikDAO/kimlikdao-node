@@ -261,25 +261,25 @@ const getValidatingTckt = (file, challenge, timeNow) => pdfjs.getDocument(file).
         /** @const {string} */
         const str = t.str.trim();
         if (personY - 2 <= y && y <= personY + 2) {
-          if (x <= 43) { // BSN, Cinsiyet, TCKN, Ad, Soyad
-            if (x <= 20) { // BSN, Cinsiyet, TCKN
-              if (x >= 16) {
+          if (x <= 45.55) { // BSN, Cinsiyet, TCKN, Ad, Soyad
+            if (x < 25.35) { // BSN, Cinsiyet, TCKN
+              if (x >= 17.26) {
                 if (str) personInfo.localIdNumber = "TR" + parseInt(str, 10);
-              } else if (9 <= x && x <= 11) {
+              } else if (9.8 <= x && x <= 11.42) {
                 if (str) personInfo.gender = str == "E" ? "M" : "F";
-              } else if (7 <= x && x <= 8.3) {
+              } else if (6.63 <= x && x < 9.8) {
                 if (str) kütükBilgileri.BSN = parseInt(str, 10);
               }
-            } else if (24.2 <= x && x <= 32) { // Ad
+            } else if (x <= 35.1) { // Ad
               personInfo.first += t.str;
-            } else if (32 < x) { // Soyad
+            } else { // Soyad
               personInfo.last += t.str;
             }
           } else { // babaad, annead, dt, dyeri, mhali, din,
-            if (x <= 72) { // babaad, annead, dt, dyeri
-              if (x <= 52) {
+            if (x <= 74.94) { // babaad, annead, dt, dyeri
+              if (x <= 54.9) {
                 kütükBilgileri.babaad += t.str;
-              } else if (x <= 63) {
+              } else if (x <= 64.1) {
                 kütükBilgileri.annead += t.str;
               } else if (y > personY) {
                 personInfo.cityOfBirth += t.str;
@@ -287,30 +287,30 @@ const getValidatingTckt = (file, challenge, timeNow) => pdfjs.getDocument(file).
                 personInfo.dateOfBirth = str;
               }
             } else { // mhali, din
-              if (x <= 80) {
+              if (x <= 81.32) {
                 if (y > personY) {
                   kütükBilgileri.mhali = str;
                 } else {
                   // personInfo.din += t.str;
                 }
-              } else if (x <= 83) {
+              } else if (x <= 86.79) {
                 kütükBilgileri.tescil += t.str;
               } else if (str.toUpperCase().includes('SAĞ'))
                 isAlive = true;
             }
           }
         } else if (recordY - 2 <= y && y <= recordY) {
-          if (x <= 60) { // il, ilçe
-            if (x <= 42) {
+          if (x <= 64.12) { // il, ilçe
+            if (x <= 45.57) {
               if (x > recordX + 0.1)
                 kütükBilgileri.il += t.str;
             } else {
               kütükBilgileri.ilçe += t.str;
             }
           } else { // mahalle, cilt, hane
-            if (x < 82) {
+            if (x < 81.32) {
               kütükBilgileri.mahalle += t.str;
-            } else if (x < 85) {
+            } else if (x < 86.79) {
               if (str) kütükBilgileri.cilt = parseInt(str, 10);
             } else
               if (str) kütükBilgileri.hane = parseInt(str, 10);

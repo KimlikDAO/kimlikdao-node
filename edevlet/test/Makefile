@@ -1,6 +1,7 @@
 build/edevlet/test/nkoParser.compiled-test.js: edevlet/test/nkoParser.compiled-test.js \
     edevlet/nkoParser.js \
     edevlet/pdfjs.d.js \
+    lib/crosschain/*.js \
     lib/did/*.d.js \
     lib/ethereum/*.d.js \
     lib/node/error.js lib/node/error.d.js lib/node/nvi.d.js \

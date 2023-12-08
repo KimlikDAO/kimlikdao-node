@@ -106,8 +106,8 @@ build/nkoWorker.deployment: build/nkoWorker.js edevlet/nkoWorker.toml \
     signerNode/signerNode.config \
     build/exposureReportWorker.deployment \
     build/humanIDWorker.deployment
-	yarn wrangler publish $< --name $(WORKER_NAME)-nko-worker \
-        --compatibility-date $(shell date +%Y-%m-%d) \
+	yarn wrangler deploy $< --name $(WORKER_NAME)-nko-worker \
+        --compatibility-date $(shell date -v -1d +%Y-%m-%d) \
         --config edevlet/nkoWorker.toml
 	touch $@
 
@@ -115,7 +115,7 @@ build/oauth2Worker.deployment: build/oauth2Worker.js edevlet/nkoWorker.toml \
     signerNode/signerNode.config \
     build/exposureReportWorker.deployment \
     build/humanIDWorker.deployment
-	yarn wrangler publish $< --name $(WORKER_NAME)-oauth2-worker \
-        --compatibility-date $(shell date +%Y-%m-%d) \
+	yarn wrangler deploy $< --name $(WORKER_NAME)-oauth2-worker \
+        --compatibility-date $(shell date -v -1d +%Y-%m-%d) \
         --config edevlet/oauth2Worker.toml
 	touch $@

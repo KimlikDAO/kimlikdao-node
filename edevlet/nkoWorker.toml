@@ -1,5 +1,4 @@
 workers_dev = false
-usage_model = "unbound"
 no_bundle = true
 minify = false
 send_metrics = false
