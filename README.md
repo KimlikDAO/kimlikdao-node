@@ -20,7 +20,7 @@ Soon we will have two node implementations: one written in Javascript + wasm to 
 ## 🪶 Light nodes
 
 ```shell
-wrangler publish -c lightNode/lightNode.toml
+make build/lightNode.deployment
 ```
 
 ## 🖋️ Signer nodes

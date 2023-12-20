@@ -21,3 +21,9 @@ build/lightNode.js: lightNode/lightNode.js lightNode/lightNode.d.js \
 	yarn uglifyjs $@ -m -c toplevel,unsafe -o $@
 	sed -i.bak 's/globalThis.LightNodeWorker=/export default/g' $@
 	wc $@
+
+build/lightNode.deployment: build/lightNode.js
+	yarn wrangler deploy $< \
+        --compatibility-date $(shell date -v -1d +%Y-%m-%d) \
+        --config build/lightNode.toml
+	touch $@
