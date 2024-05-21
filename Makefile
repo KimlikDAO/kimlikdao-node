@@ -2,10 +2,13 @@ include signerNode/signerNode.config
 
 WORKER_NAME = $(subst $\",,$(CF_WORKER_NAME))
 
+lib = node_modules/@kimlikdao/lib
+
 include edevlet/Makefile
 include lightNode/Makefile
 include signerNode/Makefile
 include workers/Makefile
+include mina/Makefile
 
 build/BEARER_TOKEN:
 	mkdir -p $(dir $@)

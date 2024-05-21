@@ -1,4 +1,4 @@
-import { ErrorCode, reject } from "/lib/node/error";
+import { ErrorCode, reject } from "@kimlikdao/lib/node/error";
 
 /** @const {!Object<string, number>} */
 const MONTHS = {
@@ -355,4 +355,5 @@ const getValidatingTckt = (file, challenge, timeNow) => pdfjs.getDocument(file).
     })
   });
 
-export { getValidatingTckt, ValidatingTckt };
+export { ValidatingTckt, getValidatingTckt };
+

@@ -1,9 +1,9 @@
+import { sign } from "@kimlikdao/lib/did/decryptedSections";
+import { err, ErrorCode, errorResponse, reject } from "@kimlikdao/lib/node/error";
+import { base64, base64ten } from "@kimlikdao/lib/util/çevir";
 import { generateCommitment } from "./nko";
 import { getValidatingTckt, ValidatingTckt } from "./nkoParser";
 import { validatePoW, validateTimestamp } from "./validation";
-import { sign } from "/lib/did/decryptedSections";
-import { err, ErrorCode, errorResponse, reject } from "/lib/node/error";
-import { base64, base64ten } from "/lib/util/çevir";
 
 /** @const {!Object<string, string>} */
 const HEADERS = {

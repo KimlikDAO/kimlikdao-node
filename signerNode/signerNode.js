@@ -7,14 +7,16 @@ import { commit } from "/edevlet/nko";
 import ipfs from "/ipfs/ipfs";
 import { yo } from "/meetgreet/yo";
 
+/** @define {string} */
+const NODE_URL = "node.kimlikdao.org";
+
 /**
  * @param {string} url
  * @return {string} the pathname extracted from the url.
  */
 const pathname = (url) => {
   const j = url.indexOf("?");
-  url = j == -1 ? url.slice(8) : url.slice(8, j);
-  url = url.slice(url.indexOf("/"));
+  url = j == -1 ? url.slice(8 + NODE_URL.length) : url.slice(8 + NODE_URL.length, j);
   return url.startsWith("/ipfs") ? "/ipfs" : url;
 }
 

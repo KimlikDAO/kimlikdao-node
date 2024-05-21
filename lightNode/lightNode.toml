@@ -2,7 +2,6 @@
 # and the route.
 name = "kimlikdao-ipfs"
 main = "../build/lightNode.js"
-compatibility_date = "2023-01-01"
 workers_dev = false
 no_bundle = true
 minify = false

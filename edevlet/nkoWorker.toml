@@ -7,3 +7,6 @@ logpush = false
 
 [vars]
 KIMLIKDAO_POW_THRESHOLD = "20000"
+
+[placement]
+mode = "smart"

@@ -1,5 +1,5 @@
-import { keccak256Uint32 } from "/lib/crypto/sha3";
-import { ErrorCode, errWithMessage } from "/lib/node/error";
+import { keccak256Uint32 } from "@kimlikdao/lib/crypto/sha3";
+import { ErrorCode, errWithMessage } from "@kimlikdao/lib/node/error";
 
 /**
  * @param {number} remoteTs

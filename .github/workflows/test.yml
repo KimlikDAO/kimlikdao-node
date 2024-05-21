@@ -7,7 +7,7 @@ on:
     branches: ["main", "prod"]
 
 jobs:
-  check:
+  checkSignerNode:
     strategy:
       fail-fast: true
 
@@ -17,16 +17,30 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
+        run: bun i
+
+      - name: Build nkoWorker
+        run: make build/nkoWorker.js
 
       - name: Build signerNode
-        run: |
-          yarn
-          make build/signerNode.js
+        run: make build/signerNode.js
+
+  checkLightNode:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
+        run: bun i
 
       - name: Build lightNode
-        run: |
-          yarn
-          make build/lightNode.js
+        run: make build/lightNode.js

@@ -1,0 +1,22 @@
+account_id = "8f0c2f2271ff857947d9a5b2c38595a0"
+
+main = "./mina.js"
+name = "kimlikdao-node-mina"
+route = { pattern = "mina.kimlikdao.org", custom_domain = true }
+
+workers_dev = false
+# no_bundle = true
+minify = false
+send_metrics = false
+node_compat = false
+logpush = false
+
+rules = [{ type = "Text", globs = [], fallthrough = false }]
+
+[[durable_objects.bindings]]
+name = "MerkleTree"
+class_name = "MerkleTree"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["MerkleTree"]
