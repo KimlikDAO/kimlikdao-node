@@ -20,3 +20,6 @@ class_name = "MerkleTree"
 [[migrations]]
 tag = "v1"
 new_classes = ["MerkleTree"]
+
+[triggers]
+crons = ["* * * * *"]
