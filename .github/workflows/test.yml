@@ -23,6 +23,15 @@ jobs:
       - name: Install dependencies
         run: bun i
 
+      - name: Build exposureReportWorker
+        run: make build/exposureReportWorker.js
+
+      - name: Build humanIDWorker
+        run: make build/humanIDWorker.js
+
+      - name: Build oauth2Worker
+        run: make build/oauth2Worker.js
+
       - name: Build nkoWorker
         run: make build/nkoWorker.js
 
@@ -44,3 +53,19 @@ jobs:
 
       - name: Build lightNode
         run: make build/lightNode.js
+
+  runUnitTests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
+        run: bun i
+
+      - name: Run Mina unit tests
+        run: make mina.test

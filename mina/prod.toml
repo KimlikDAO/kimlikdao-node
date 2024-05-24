@@ -17,9 +17,17 @@ rules = [{ type = "Text", globs = [], fallthrough = false }]
 name = "MerkleTree"
 class_name = "MerkleTree"
 
+[[durable_objects.bindings]]
+name = "MinaState"
+class_name = "MinaState"
+
 [[migrations]]
 tag = "v1"
 new_classes = ["MerkleTree"]
+
+[[migrations]]
+tag = "v2"
+new_classes = ["MinaState"]
 
 [triggers]
 crons = ["* * * * *"]

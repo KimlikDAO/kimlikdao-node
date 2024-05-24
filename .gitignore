@@ -1,10 +1,10 @@
 .DS_Store
 .wrangler
-*lock*
 *.vars
+*lock*
 /build
-/node_modules
 /target
+node_modules
 
 # Contains confidential test data such as actual e-devlet pdfs.
 /edevlet/testdata

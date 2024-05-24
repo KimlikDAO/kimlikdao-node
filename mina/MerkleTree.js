@@ -1,8 +1,13 @@
 import { poseidon } from "@kimlikdao/lib/crypto/poseidon";
+import hex from "@kimlikdao/lib/util/hex";
+import {
+  BinaryKey,
+  HexKey,
+  MerkleTree as IMerkleTree,
+  Value,
+  WitnessElem,
+} from "@kimlikdao/lib/util/merkleTree";
 import { DurableObject } from "cloudflare:workers";
-
-/** @typedef {string} */
-const BinaryKey = {};
 
 /**
  * In InvKey, the last bit is inverted. This achieves some optimizations
@@ -16,12 +21,12 @@ const InvKey = {};
  * @param {BinaryKey} key
  * @return {InvKey}
  */
-const toInvKey = (key) => key
- ? key.slice(0, -1) + +(key.charCodeAt(key.length - 1) == 48)
- : "r";
+const toInvKey = (key) =>
+  key ? key.slice(0, -1) + +(key.charCodeAt(key.length - 1) == 48) : "r";
 
 /**
  * @implements {cloudflare.DurableObject}
+ * @implements {IMerkleTree}
  */
 class MerkleTree extends DurableObject {
   /**
@@ -39,8 +44,11 @@ class MerkleTree extends DurableObject {
     /** @type {!Array<!bigint>} */
     this.zeros = [];
 
-    state.blockConcurrencyWhile(() => state.storage.get("height")
-      .then((/** number */ height) => this._setHeight(height || 0)));
+    state.blockConcurrencyWhile(() =>
+      state.storage
+        .get("height")
+        .then((/** number */ height) => this._setHeight(height || 0))
+    );
   }
 
   /**
@@ -49,7 +57,7 @@ class MerkleTree extends DurableObject {
    * @param {number} height
    */
   _setHeight(height) {
-    if (this.height) throw `Initialized ${this.height}`;
+    if (this.height) throw `Initialized ${this.height}, ${height}`;
     /** @const {!Array<!bigint>} */
     const zeros = Array(height + 1);
     /** @const {!Array<!bigint>} */
@@ -70,25 +78,31 @@ class MerkleTree extends DurableObject {
   }
 
   /**
+   * @override
+   *
    * @param {BinaryKey} key
-   * @return {!Promise<!bigint>}
+   * @return {!Promise<Value>}
    */
   getNode(key) {
-    return this.storage.get(toInvKey(key)).then((/** !bigint */ val) => val || this.zeros[key.length]);
+    return this.storage
+      .get(toInvKey(key))
+      .then((/** Value */ val) => val || this.zeros[key.length]);
   }
 
   /**
-   * @param {BinaryKey} key
-   * @param {!bigint} val
-   * @return {!Promise<!bigint>} the root after insertion
+   * @override
+   *
+   * @param {HexKey} key
+   * @param {Value} val
+   * @return {!Promise<Value>} the root after insertion
    */
   setLeaf(key, val) {
-    return this.getWitness(key).then((witness) => {
-      /** @const {!Object<InvKey, !bigint>} */
+    return this._getWitness(key).then(({ witness, key }) => {
+      /** @const {!Object<InvKey, Value>} */
       const entries = {};
       for (const w of witness) {
         key = key.slice(0, -1);
-        entries[key + (+w.isLeft)] = val;
+        entries[key + +w.isLeft] = val;
         val = poseidon(w.isLeft ? [val, w.sibling] : [w.sibling, val]);
       }
       entries["r"] = val;
@@ -97,28 +111,41 @@ class MerkleTree extends DurableObject {
   }
 
   /**
-   * @param {BinaryKey} key
-   * @return {!Promise<!Array<mina.Witness>>}
+   * @override
+   *
+   * @param {HexKey} key
+   * @return {!Promise<!Array<WitnessElem>>}
    */
   getWitness(key) {
-    const h = key.length;
+    return this._getWitness(key).then((val) => val.witness);
+  }
+
+  /**
+   * @param {HexKey} key
+   * @return {!Promise<{
+   *   witness: !Array<WitnessElem>,
+   *   key: BinaryKey
+   * }>}
+   */
+  _getWitness(key) {
+    const h = this.height;
+    key = hex.toBinary(key).padStart(h, "0").slice(0, h);
     /** @const {!Array<string>} */
     const keys = Array(h);
-    for (let i = 0; i < h; ++i)
-      keys[i] = key.slice(0, i + 1);
-    return this.storage.get(keys).then((/** !Map<string, !bigint> */ map) => {
-      /** @const {!Array<mina.Witness>} */
+    for (let i = 0; i < h; ++i) keys[i] = key.slice(0, i + 1);
+    return this.storage.get(keys).then((/** !Map<string, Value> */ map) => {
+      /** @const {!Array<WitnessElem>} */
       const witness = Array(h);
       /** @type {number} */
       let i = 0;
       for (const k of keys)
         witness[h - ++i] = {
           isLeft: k.charCodeAt(i - 1) == 48,
-          sibling: map.get(k) || this.zeros[i]
-        }
-      return witness;
+          sibling: map.get(k) || this.zeros[i],
+        };
+      return { witness, key };
     });
   }
 }
 
-export { MerkleTree };
+export { HexKey, MerkleTree, WitnessElem };

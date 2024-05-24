@@ -5,11 +5,11 @@ A KimlikDAO protocol node may be run in one of the two modes:
 - 🪶 light node: permissionless; anyone can run a binary to join the network, <!--
   --> and
 - 🖋️ signer node: requires staking the minimum required <!--
-  --> [TCKO](https://github.com/KimlikDAO/TCKO)s and an approval by the DAO vote <!--
+  --> [KDAO](https://github.com/KimlikDAO/KDAO)s and an approval by the DAO vote <!--
   --> (the process in fully on-chain; see below). A malicious deviation from the <!--
-  --> protocol results in complete loss of all the staked TCKOs (which are then <!--
+  --> protocol results in complete loss of all the staked KDAOs (which are then <!--
   --> distributed to the honest signers by the <!--
-  --> [TCKTSigners](https://github.com/KimlikDAO/TCKT/blob/main/contracts/TCKTSigners.sol) contract).
+  --> [KPassSigners](https://github.com/KimlikDAO/KPass/blob/main/evm/KPassSigners.sol) contract).
 
 Soon we will have two node implementations: one written in Javascript + wasm to <!--
 --> be run on the Cloudflare Workers platform and one written in Rust and <!--
@@ -29,7 +29,7 @@ To run a signer node, first you need
 
 1. A computer (for the rust client) or a Clouflare Workers account <!--
    -->(for the javascript + wasm client).
-2. The required amount of [TCKO](https://github.com/KimlikDAO/TCKO)s to stake.
+2. The required amount of [KDAO](https://github.com/KimlikDAO/KDAO)s to stake.
 3. Optionally, if you want to enable the email verification endpoint, <!--
    -->a domain name and in the case of the rust client a static IP (this <!--
    -->is so that your node can send out verification emails without getting <!--
@@ -41,13 +41,13 @@ To run a signer node, first you need
 Once you have these, the step are as follows:
 
 1. Generate an EVM private key and the derived address. It is crucial that <!--
-   -->you keep this private key secure. You'll lose all your staked TCKOs if <!--
+   -->you keep this private key secure. You'll lose all your staked KDAOs if <!--
    -->you get this key stolen or misplace it.
-2. Transfer the minimum required TCKOs to the address you obtained.
+2. Transfer the minimum required KDAOs to the address you obtained.
 3. Approve the <!--
-   -->[TCKTSigners](https://github.com/KimlikDAO/TCKT/blob/main/contracts/TCKTSigners.sol) <!--
-   -->contract for the required amount of TCKOs. (Call the `approve()` method of <!--
-   -->the `TCKO` contract with `TCKTSigners`'s address and the required amount <!--
+   -->[KPassSigners](https://github.com/KimlikDAO/KPass/blob/main/evm/KPassSigners.sol) <!--
+   -->contract for the required amount of KDAOs. (Call the `approve()` method of <!--
+   -->the `KDAO` contract with `KPassSigners`'s address and the required amount <!--
    -->for a long enough duration.)
 4. Submit your proposal to be a signer to the <!--
    -->[Oylama](https://github.com/KimlikDAO/Oylama) contract. For convenience you <!--
@@ -71,7 +71,7 @@ make build/signerNode.deployment
 Your node will <!--
 -->discover other nodes and request the network parameters from them. If you <!--
 -->have been approved by the DAO vote, your nodes EVM address will be registered in the <!--
--->[TCKTSigners](https://github.com/KimlikDAO/TCKT/blob/main/contracts/TCKTSigners.sol) <!--
+-->[KPassSigners](https://github.com/KimlikDAO/KDAO/blob/main/evm/KPassSigners.sol) <!--
 -->contract and your node will be able to prove its identity. Once that happens, <!--
 -->you should start getting some requests from the KimlikDAO dApps.
 

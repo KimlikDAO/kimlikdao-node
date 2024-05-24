@@ -41,17 +41,22 @@ const MinaWorker = {
 
     if (pathname.startsWith("/witness")) {
       const address = pathname.slice("/witness/".length, "/witness/".length + 55);
-      const index = hex.toBin(pathname.slice("/witness/".length + 56)).padStart(32, "0");
+      const index = pathname.slice("/witness/".length + 56);
 
       /** @const {!MerkleTree} */
       const merkleTree = /** @type {!MerkleTree} */ (
         env.MerkleTree.get(env.MerkleTree.idFromName(address)));
 
-      return merkleTree.getWitness(index).then((w) => new Response(JSON.stringify(w), {
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-        }}));
+      return merkleTree.getWitness(index).then((witness) => {
+        console.log(witness);
+        witness.forEach((w) => w.sibling = w.sibling.toString(16));
+        return new Response(JSON.stringify(witness), {
+          headers: {
+            'content-type': 'application/json',
+            'access-control-allow-origin': '*'
+          }
+        })
+      });
     }
   },
 
@@ -88,12 +93,12 @@ const MinaWorker = {
           await merkleTree.setHeight(+val);
           break;
         case "0": await merkleTree.setLeaf(
-          hex.toBin(BigInt(val).toString(16) & 0xffffffffn)).padStart(32, "0");
+          BigInt(val).toString(16) & 0xffffffffn);
           break;
       }
     }
 
-    await minaState.setHeight(events[events.length - 1].blockInfo.height);
+    return minaState.setHeight(events[events.length - 1].blockInfo.height);
   },
 };
 

@@ -2,9 +2,11 @@
   "name": "kimlikdao-node",
   "version": "0.0.0",
   "type": "module",
+  "scripts": {
+    "postinstall": "mkdir -p ./node_modules/@kimlikdao && ln -sfn ../../lib ./node_modules/@kimlikdao/lib"
+  },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240512.0",
-    "@kimlikdao/lib": "github:KimlikDAO/kimlikdao-js",
     "google-closure-compiler": "^20240317.0.0",
     "uglify-js": "^3.17.4",
     "vitest": "^1.6.0",
