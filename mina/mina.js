@@ -1,4 +1,3 @@
-import hex from "@kimlikdao/lib/util/hex";
 import { MerkleTree } from "./MerkleTree";
 import { MinaState } from "./MinaState";
 
@@ -47,17 +46,19 @@ const MinaWorker = {
       const merkleTree = /** @type {!MerkleTree} */ (
         env.MerkleTree.get(env.MerkleTree.idFromName(address)));
 
-      return merkleTree.getWitness(index).then((witness) => {
-        console.log(witness);
-        witness.forEach((w) => w.sibling = w.sibling.toString(16));
-        return new Response(JSON.stringify(witness), {
+      return merkleTree.getWitness(index).then((witness) =>
+        new Response(JSON.stringify(witness.map((w) => /** @type {mina.Witness} */({
+          sibling: w.sibling.toString(16),
+          isLeft: w.isLeft
+        }))), {
           headers: {
             'content-type': 'application/json',
             'access-control-allow-origin': '*'
           }
         })
-      });
+      );
     }
+    return Promise.reject();
   },
 
   /**
@@ -65,25 +66,59 @@ const MinaWorker = {
    *
    * A very simple and error prone Mina sychronization method.
    * Will not survive forks.
+   *
+   * @param {!MinaEnv} env
    */
   async scheduled(event, env) {
     /** @const {!MerkleTree} */
-    const merkleTree = env.MerkleTree.get(env.MerkleTree.idFromName(LEARN2EARN));
+    const merkleTree = /** @type {!MerkleTree} */(env.MerkleTree.get(env.MerkleTree.idFromName(LEARN2EARN)));
     /** @const {!MinaState} */
-    const minaState = env.MinaState.get(env.MinaState.idFromName(""));
-    /** @const */
-    const lastHeight = minaState.getHeight();
+    const minaState = /** @type {!MinaState} */(env.MinaState.get(env.MinaState.idFromName("")));
+    /** @const {number} */
+    const lastHeight = await minaState.getHeight();
+    console.log("Last height", lastHeight);
 
-    let events = await fetch(MINA_NODE_URL, {
+    /**
+     * @typedef {{
+     *   height: number
+     * }}
+     */
+    const BlockInfo = {};
+
+    /**
+     * @typedef {{
+    *   status: string
+    * }}
+    */
+    const TransactionInfo = {};
+
+    /**
+     * @typedef {{
+     *   transactionInfo: TransactionInfo,
+     *   data: !Array<string>
+     * }}
+     */
+    const EventData = {};
+
+    /**
+     * @typedef {{
+     *   blockInfo: BlockInfo,
+     *   eventData: !Array<EventData>
+     * }}
+     */
+    const EventInfo = {};
+
+    /** @type {!Array<EventInfo>} */
+    let events = /** @type {!Array<EventInfo>} */(await fetch(MINA_NODE_URL, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ query: EventsQuery }),
     })
       .then((res) => res.json())
-      .then((data) => data["data"]["events"].filter((e) =>
+      .then((data) => /** !Array<EventInfo> */(data["data"]["events"]).filter((/** EventInfo */ e) =>
         e.eventData[0].transactionInfo.status == "applied" &&
         e.blockInfo.height > lastHeight
-      ));
+      )));
     events.sort((x, y) => x.blockInfo.height - y.blockInfo.height);
 
     for (const e of events) {
@@ -91,14 +126,20 @@ const MinaWorker = {
       switch (type) {
         case "1":
           await merkleTree.setHeight(+val);
+          console.log(`height set ${+val}`);
           break;
-        case "0": await merkleTree.setLeaf(
-          BigInt(val).toString(16) & 0xffffffffn);
+        case "0":
+          await merkleTree.setLeaf(BigInt(val).toString(16), 1n);
+          console.log(`leaf set ${val}`);
           break;
       }
     }
 
-    return minaState.setHeight(events[events.length - 1].blockInfo.height);
+    if (events.length) {
+      const height = +(events.pop().blockInfo.height);
+      console.log(`mina state height set ${height}`);
+      await minaState.setHeight(height);
+    }
   },
 };
 

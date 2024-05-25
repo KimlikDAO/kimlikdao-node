@@ -23,11 +23,7 @@ class_name = "MinaState"
 
 [[migrations]]
 tag = "v1"
-new_classes = ["MerkleTree"]
-
-[[migrations]]
-tag = "v2"
-new_classes = ["MinaState"]
+new_classes = ["MerkleTree", "MinaState"]
 
 [triggers]
 crons = ["* * * * *"]
