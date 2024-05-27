@@ -1,5 +1,13 @@
 import { DurableObject } from "cloudflare:workers";
 
+// sdk/mina/HumanIDv1.InitEventUID
+// const InitEventUID =
+//   0x363b52a04cf908f3357575efb35b0bf635ebb4fc2e921c140e99426fb1ef89dcn;
+
+// sdk/mina/HumanIDv1.AddEventUID
+// const AddEventUID =
+//   0x13c6e18cd3ba5dab50481970932ded0f7513e22ada9b77949a83dd54fc7c4e6dn;
+
 /**
  * @implements {cloudflare.DurableObject}
  */
@@ -33,6 +41,21 @@ class MinaState extends DurableObject {
   setHeight(height) {
     this.height = height;
     return this.storage.put("height", height);
+  }
+
+  /**
+   * @returns {!Promise<void>}
+   */
+  async start() {
+    if (await this.storage.getAlarm() != null) return;
+    this.alert();
+  }
+
+  /**
+   * @returns {!Promise<void>}
+   */
+  async alert() {
+    this.storage.setAlarm(Date.now() + 1000);
   }
 }
 
