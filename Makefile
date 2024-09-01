@@ -4,7 +4,6 @@ WORKER_NAME = $(subst $\",,$(CF_WORKER_NAME))
 
 lib = node_modules/@kimlikdao/lib
 
-include lib/util/Makefile
 include edevlet/Makefile
 include lightNode/Makefile
 include signerNode/Makefile

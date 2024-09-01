@@ -1,4 +1,4 @@
-import ipfs from '@kimlikdao/lib/node/ipfs';
+import ipfs from "/lib/node/ipfs";
 
 /**
  * @param {!Request} req

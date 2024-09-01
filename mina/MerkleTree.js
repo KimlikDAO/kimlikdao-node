@@ -1,13 +1,13 @@
-import { poseidon } from "@kimlikdao/lib/crypto/poseidon";
-import hex from "@kimlikdao/lib/util/hex";
+import { DurableObject } from "cloudflare:workers";
+import { poseidon } from "/lib/crypto/minaPoseidon";
+import hex from "/lib/util/hex";
 import {
   BinaryKey,
   HexKey,
   MerkleTree as IMerkleTree,
   Value,
   WitnessElem,
-} from "@kimlikdao/lib/util/merkleTree";
-import { DurableObject } from "cloudflare:workers";
+} from "/lib/util/merkleTree";
 
 /**
  * In InvKey, the last bit is inverted. This achieves some optimizations

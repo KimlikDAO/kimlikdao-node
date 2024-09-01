@@ -1,6 +1,6 @@
-import { DurableObjectState } from "@kimlikdao/lib/cloudflare/mock/durableObject";
-import { MinaMerkleTree } from "@kimlikdao/lib/mina/merkleTree";
-import { assertArrayEq, assertEq } from "@kimlikdao/lib/testing/assert";
+import { DurableObjectState } from "/lib/birimler/cloudflare/mock/durableObject";
+import { MinaMerkleTree } from "/lib/mina/merkleTree";
+import { assertArrayEq, assertEq } from "/lib/testing/assert";
 import { HexKey, MerkleTree, WitnessElem } from "../MerkleTree";
 
 /**

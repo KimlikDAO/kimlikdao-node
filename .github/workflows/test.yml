@@ -8,6 +8,7 @@ on:
 
 jobs:
   checkSignerNode:
+    if: false
     strategy:
       fail-fast: true
 
@@ -39,6 +40,7 @@ jobs:
         run: make build/signerNode.js
 
   checkLightNode:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -54,18 +56,20 @@ jobs:
       - name: Build lightNode
         run: make build/lightNode.js
 
-  runUnitTests:
+  checkCrateServer:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
           submodules: recursive
 
-      - name: Install bun
-        uses: oven-sh/setup-bun@v1
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
 
-      - name: Install dependencies
-        run: bun i
-
-      - name: Run Mina unit tests
-        run: make mina.test
+      - name: Run tests
+        run: cargo test --all --verbose

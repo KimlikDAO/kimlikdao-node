@@ -1,5 +1,5 @@
-import { keccak256Uint32 } from "@kimlikdao/lib/crypto/sha3";
-import { ErrorCode, errWithMessage } from "@kimlikdao/lib/node/error";
+import { keccak256Uint32 } from "/lib/crypto/sha3";
+import { ErrorCode, errWithMessage } from "/lib/node/error";
 
 /**
  * @param {number} remoteTs
@@ -28,4 +28,4 @@ const validatePoW = (commitPow, powThreshold) => {
   return errWithMessage(406, ErrorCode.INVALID_POW, ["" + digit, "" + powThreshold]);
 }
 
-export { validateTimestamp, validatePoW };
+export { validatePoW, validateTimestamp };

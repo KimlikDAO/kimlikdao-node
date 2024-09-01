@@ -5,6 +5,8 @@
 /build
 /target
 node_modules
+.vscode
+/crate
 
 # Contains confidential test data such as actual e-devlet pdfs.
 /edevlet/testdata

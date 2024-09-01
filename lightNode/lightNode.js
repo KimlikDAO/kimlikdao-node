@@ -24,5 +24,4 @@ const LightNodeWorker = {
   }
 };
 
-globalThis["LightNodeWorker"] = LightNodeWorker;
 export default LightNodeWorker;

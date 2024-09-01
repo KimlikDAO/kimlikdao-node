@@ -1,7 +1,7 @@
-import { keccak256Uint32 } from "@kimlikdao/lib/crypto/sha3";
-import { err, ErrorCode } from "@kimlikdao/lib/node/error";
-import { base64ten, uint8ArrayeBase64ten } from "@kimlikdao/lib/util/çevir";
 import { validatePoW } from "./validation";
+import { keccak256Uint32 } from "/lib/crypto/sha3";
+import { err, ErrorCode } from "/lib/node/error";
+import { base64ten, uint8ArrayeBase64ten } from "/util/çevir";
 
 /** @const {!Object<string, string>} */
 const STATIC_HEADERS = {
